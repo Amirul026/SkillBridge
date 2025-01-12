@@ -19,7 +19,7 @@
 | **ID**       | **Name**                       | **Email**                          | **Github**                          | **Role**             |
 |--------------|--------------------------------|------------------------------------|-------------------------------------|----------------------|
 | 20220104032  | **Eusha Ahmed Mahi**             | eushaahmed08@gmail.com             | [eushaahmed08](https://github.com/eushaahmed08) |  Backend + Frontend |
-| 20220104033  | **Tanvir Arifr**       | tanvirarif0802@gmail.com    | [tanvirarif033](https://github.com/tanvirarif033) | Frontend + Backend |
+| 20220104033  | **Tanvir Arif**       | tanvirarif0802@gmail.com    | [tanvirarif033](https://github.com/tanvirarif033) | Frontend + Backend |
 | 20220104042  | **Amirul Momin Utshaw**  | mominamirul96@gmail.com               | [Amirul026](https://github.com/Amirul026) | Lead 
 
 ---
@@ -57,7 +57,7 @@ SkillBridge is designed to connect university alumni and students to facilitate 
 - PHP >= 8.0.30
 - Composer
 - Node.js
-- MySQL
+- Microsoft SQL Server
 
 <details>
 <summary>Backend (Laravel)</summary>
@@ -104,9 +104,9 @@ SkillBridge is designed to connect university alumni and students to facilitate 
 A mock user interface has been designed using Figma. The design includes:
 - Home page
 - User dashboard
-- Skill listing pages
+- Trending courses
 - Chat interface
-- Session scheduler
+- Learners leaderboard
 
 ### Figma Design Link:
 [SkillBridge UI Design](https://www.figma.com/design/S9pVLiHuuedG3V6v6oClbG/E-Learning-Website-Design-(Community)?node-id=70-79&m=dev&t=glmNFA9HhCicwuuu-1)
@@ -203,11 +203,12 @@ A mock user interface has been designed using Figma. The design includes:
 - Create the Laravel backend with user authentication.
 - Design the database schema in Microsoft SQL Server.
 - Build the React frontend structure.
-- Implement course and video management (upload, update, and paywall functionality).
+- Start implementing course and video management (upload, update, and paywall functionality).
 
 
 ### Milestone 2: Core Functionality
 
+-   Complete implementing course and video management (upload, update, and paywall functionality).
 -   Develop the live class and broadcasting system.
 -   Add real-time chat functionality with file sharing.
 -   Build the video call session functionality for mentor-learner interaction.
