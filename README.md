@@ -1,6 +1,6 @@
 
 
-# SkillBridge: Collaborative Skill Exchange Platform
+# SkillBridge: Collaborative Learning Platform
 
 ## Table of Contents
 
