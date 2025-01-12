@@ -7,6 +7,7 @@
 - [👥 Team Members](#-team-members)
 - [📄 Project Overview](#-project-overview)
 - [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
+- [🚧 Installation](#-installation)
 - [🎨 UI Design](#-ui-design)
 - [🚀 Project Features](#-project-features)
 - [🔗 API Endpoints](#-api-endpoints)
