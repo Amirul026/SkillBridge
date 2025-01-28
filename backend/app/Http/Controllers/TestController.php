@@ -19,4 +19,9 @@ class TestController extends Controller
         $data = $this->testService->getTestHuman();
         return $data;
     }
+    public function getTestHumanWithId(Request $request): string
+    {
+        $id = $request->route(param: "id");
+        return "This is a test human response from TestController with id :$id";
+    }
 }

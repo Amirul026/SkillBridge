@@ -12,6 +12,10 @@ use App\Http\Controllers\TestController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/test', [TestController::class, 'getTestHuman']);
+// Route::get('/test', [TestController::class, 'getTestHuman']);
 Route::get('/test/{id}', [TestController::class, 'getTestHumanWithId']);
+Route::get('/test', function () {
+    return response()->json(['message' => 'Backend connected successfully!']);
+});
+
 
