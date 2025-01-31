@@ -1,0 +1,97 @@
+/* SignUp Container */
+.signup-container {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: flex-start; /* Align to the top */
+    min-height: 100vh;
+    background-color: #f7f7f7;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Prevent scrolling */
+    padding: 20px; /* Add padding to the top and right */
+  }
+  
+  /* SignUp Box */
+  .signup-box {
+    background-color: white;
+    padding: 1.5rem; /* Reduced padding */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px; /* Further reduced width */
+    text-align: center;
+  }
+  
+  .signup-box h2 {
+    font-size: 20px; /* Reduced font size */
+    font-weight: bold;
+    margin-bottom: 1rem; /* Reduced margin */
+    color: #1a1a52;
+  }
+  
+  /* Form Group */
+  .form-group {
+    margin-bottom: 0.75rem; /* Reduced margin */
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 12px; /* Reduced font size */
+    color: #333;
+    margin-bottom: 0.25rem; /* Reduced margin */
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem; /* Reduced padding */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px; /* Reduced font size */
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .form-group input:focus {
+    border-color: #1a1a52;
+  }
+  
+  /* Sign Up Button */
+  .signup-box button {
+    width: 100%;
+    padding: 0.5rem; /* Reduced padding */
+    background-color: #1a1a52;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px; /* Reduced font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 0.75rem; /* Reduced margin */
+  }
+  
+  .signup-box button:hover {
+    background-color: #3333aa;
+  }
+  
+  /* Login Link */
+  .login-link {
+    margin-top: 0.75rem; /* Reduced margin */
+    font-size: 12px; /* Reduced font size */
+    color: #333;
+  }
+  
+  .login-link a {
+    color: #1a1a52;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Prevent body scrolling */
+  body {
+    margin: 0;
+    overflow: hidden; /* Ensure no scrolling on the body */
+  }

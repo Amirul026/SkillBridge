@@ -1,15 +1,27 @@
-/* Footer.css */
-
+/* Ensure the footer stays at the bottom of the page */
 .footer {
     background-color: #1a1440; /* Dark blue background */
     color: white;
-    padding: 20px 0;
+    padding: 10px 0;
     text-align: left;
-    width: 100%;
+    width: 100vw; /* Full viewport width */
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 1000;
+}
+
+/* Ensure the page content doesn't overlap with the footer */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full height of the viewport */
+    padding-bottom: 50px; /* Same as the footer height */
+}
+
+.content {
+    flex: 1; /* Pushes the footer to the bottom */
 }
 
 .footer-container {
@@ -18,16 +30,15 @@
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .footer-links {
     display: flex;
-    gap: 50px;
+    gap: 30px;
     flex-wrap: wrap;
-    width: 100%;
-    justify-content: space-between;
 }
 
 .footer-links div {
@@ -38,8 +49,8 @@
 .footer-links a {
     color: white;
     text-decoration: none;
-    margin-bottom: 8px;
-    font-size: 14px;
+    margin-bottom: 5px;
+    font-size: 12px;
     transition: color 0.3s ease;
 }
 
@@ -50,27 +61,24 @@
 .footer-social {
     display: flex;
     align-items: center;
-    gap: 12px;
-    width: 100%;
-    justify-content: flex-end;
-    margin-top: 10px;
+    gap: 10px;
 }
 
 .footer-social span {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
 }
 
 .footer-social a {
     color: white;
     background-color: #24555f;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    font-size: 18px;
+    font-size: 14px;
     transition: background-color 0.3s ease;
 }
 

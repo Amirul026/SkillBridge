@@ -1,29 +1,41 @@
 import React from "react";
 import { FaShoppingCart } from "react-icons/fa";
-import "./Header.css";
-
+import { NavLink } from "react-router-dom";
+import "./Header.css"; // Import the CSS file
 
 const Header = () => {
   return (
-    <header className="flex justify-between items-center p-4 shadow-md">
-      <h1 className="text-2xl font-bold">SkillBridge</h1>
-      <nav className="space-x-6">
-        <a href="#" className="border-b-2 border-black">Home</a>
-        <a href="#">Seminar</a>
-        <a href="#">Courses</a>
-        <a href="#">Mentors</a>
-        <div className="relative">
-        <FaShoppingCart size={20} />
-          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1">1</span>
-        </div>
+    <header>
+      <h1>
+        <NavLink to="/">SkillBridge</NavLink>
+      </h1>
+      <nav>
+        <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
+          Home
+        </NavLink>
+        <NavLink to="/seminar" className={({ isActive }) => (isActive ? "active" : "")}>
+          Seminar
+        </NavLink>
+        <NavLink to="/courses" className={({ isActive }) => (isActive ? "active" : "")}>
+          Courses
+        </NavLink>
+        <NavLink to="/mentors" className={({ isActive }) => (isActive ? "active" : "")}>
+          Mentors
+        </NavLink>
       </nav>
-      <div className="flex items-center space-x-4">
-
+      <div className="right-section">
+        <div className="cart-container">
+          <FaShoppingCart />
+          <span className="cart-badge">1</span>
+        </div>
         <div className="buttons-container">
-        <button className="login-btn">Login</button>
-  <     button className="register-btn">Register</button>
-      </div>
-
+          <NavLink to="/login" className="login-btn">
+            Login
+          </NavLink>
+          <NavLink to="/signup" className="register-btn">
+            Register
+          </NavLink>
+        </div>
       </div>
     </header>
   );

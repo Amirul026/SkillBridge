@@ -28,6 +28,11 @@ header h1 {
   color: #1a1a52;
 }
 
+header h1 a {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* Navigation Links */
 nav {
   display: flex;
@@ -40,11 +45,14 @@ nav a {
   font-size: 16px;
   position: relative;
   padding-bottom: 5px;
+  transition: color 0.3s ease-in-out;
 }
 
+/* Active Link & Hover Effect */
 nav a:hover,
 nav a.active {
   border-bottom: 2px solid black;
+  color: #1a1a52;
 }
 
 /* Right Section (Cart, Login, Register) */
@@ -66,6 +74,11 @@ nav a.active {
 .cart-container svg {
   font-size: 20px;
   color: #333;
+  transition: color 0.3s ease-in-out;
+}
+
+.cart-container:hover svg {
+  color: #1a1a52;
 }
 
 .cart-badge {
@@ -77,26 +90,6 @@ nav a.active {
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 50%;
-}
-
-/* Buttons */
-.buttons-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-button {
-  border: 1px solid black;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-button:hover {
-  opacity: 0.8;
 }
 
 /* Buttons Container */
@@ -116,6 +109,13 @@ button:hover {
   cursor: pointer;
   font-size: 14px;
   white-space: nowrap;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+}
+
+.login-btn:hover {
+  background: black;
+  color: white;
 }
 
 /* Register Button */
@@ -128,6 +128,12 @@ button:hover {
   cursor: pointer;
   font-size: 14px;
   white-space: nowrap;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+}
+
+.register-btn:hover {
+  background: #3333aa;
 }
 
 /* Responsive Fix */
@@ -144,7 +150,8 @@ button:hover {
     gap: 10px;
   }
 
-  button {
+  .login-btn,
+  .register-btn {
     padding: 6px 10px;
     font-size: 12px;
   }
