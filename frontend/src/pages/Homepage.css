@@ -1,0 +1,75 @@
+/* Homepage Container */
+.homepage-container {
+    position: absolute; /* Use absolute positioning to place it on top and center */
+    top: 50%; /* Position it vertically in the middle */
+    left: 50%; /* Position it horizontally in the middle */
+    transform: translate(-50%, -50%); /* Offset it by half of its own size to truly center */
+    width: 100%; /* Ensure it takes the full width of the page */
+    padding: 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    
+    
+  }
+  
+  /* Search Input */
+  .homepage-container input {
+    width: 60%; /* Set input to 60% of the container's width */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .homepage-container input:focus {
+    border-color: #1a1a52;
+  }
+  
+  /* Heading */
+  .homepage-container h2 {
+    margin-top: 24px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    max-width: 80%; /* Prevent heading from being too wide */
+    margin-bottom: 16px;
+  }
+  
+  /* Visit Courses Button */
+  .homepage-container button {
+    margin-top: 16px;
+    background-color: #1a1a52;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .homepage-container button:hover {
+    background-color: #14144a;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .homepage-container input {
+      width: 80%; /* Increase input width on smaller screens */
+    }
+  
+    .homepage-container h2 {
+      font-size: 20px; /* Reduce heading font size on smaller screens */
+    }
+  
+    .homepage-container button {
+      width: 100%; /* Make button span the full width on smaller screens */
+      padding: 12px; /* Adjust padding for smaller screens */
+    }
+  }
+
+  
+
+  
