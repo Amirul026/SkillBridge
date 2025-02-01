@@ -1,0 +1,97 @@
+/* Login.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+}
+
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 320px; /* Reduced Width */
+  padding: 30px; /* Reduced Padding */
+  background-color: white;
+  border-radius: 15px; /* Slightly smaller border radius */
+  border: 2px solid #1a1a52; /* Border Color */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin-bottom: 15px; /* Reduced margin */
+  font-size: 22px; /* Slightly smaller font */
+  color: #333;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 12px; /* Reduced spacing */
+}
+
+.form-group label {
+  font-size: 14px; /* Reduced font size */
+  margin-bottom: 5px;
+  color: #555;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px; /* Reduced padding */
+  border: 1px solid #ccc;
+  border-radius: 6px; /* Slightly smaller border radius */
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  padding: 10px; /* Reduced padding */
+  background-color: #1a1a52; /* Button Background Color */
+  color: white;
+  border: 2px solid #1a1a52; /* Button Border Color */
+  border-radius: 6px;
+  font-size: 16px; /* Slightly smaller font size */
+  cursor: pointer;
+  margin-top: 12px; /* Reduced margin */
+  transition: 0.3s ease-in-out;
+
+}
+
+button:hover {
+  background-color: white;
+  color: #1a1a52;
+}
+
+.signup-link {
+  margin-top: 12px; /* Reduced margin */
+  font-size: 14px; /* Reduced font size */
+}
+
+.signup-link a {
+  color: #1a1a52; /* Link Color */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
