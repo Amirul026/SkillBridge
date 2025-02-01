@@ -1,30 +1,27 @@
+/* Ensure the homepage content is properly aligned */
 .homepage-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Start content from top */
   width: 100vw;
-  height: 100vh;
-  overflow-y: auto;
+  min-height: 100vh; /* Ensures full screen height */
+  height: auto;
+  overflow: visible; /* Allows natural scrolling */
   text-align: center;
-  padding: 20px;
+  padding: 100px 20px 20px; /* Prevents header overlap */
+  position: relative;
 }
-.text{
-  margin: 10px;
-}
-.text2{
-  margin-bottom: 10px;
-}
+
+/* Search section */
 .search-section {
   width: 80%;
   margin-bottom: 30px;
-}
-.button-section{
-  width: 15%;
+  z-index: 1; /* Keeps search bar above other content */
 }
 
 .search-section input {
-  width: 80%;
+  width: 100%;
   padding: 15px;
   font-size: 18px;
   border: 1px solid #ccc;
@@ -32,6 +29,36 @@
   outline: none;
 }
 
+/* Text Sections */
+.text {
+  margin: 10px;
+}
+
+.text2 {
+  margin-bottom: 10px;
+}
+
+/* Button section */
+.button-section {
+  width: 15%;
+}
+
+.button-section button {
+  padding: 8px 15px;
+  font-size: 14px;
+  background-color: #1e3a8a; /* Dark blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-section button:hover {
+  background-color: #172554; /* Darker blue */
+  color: white;
+}
+
+/* Testimonials Section */
 .testimonials-section {
   width: 90%;
   margin: 20px auto;
@@ -41,7 +68,7 @@
 .testimonials-container {
   display: flex;
   justify-content: center;
-  gap: 10px; /* Reduced gap between cards */
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -80,8 +107,59 @@
   margin-top: 5px;
 }
 
-button {
-  padding: 5px 10px; /* Smaller button size */
+/* Mentors Section */
+.mentors-section {
+  width: 90%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.mentors-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto; /* Allows horizontal scrolling for mentors */
+  padding: 10px;
+}
+
+.mentor-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-width: 200px;
+  max-width: 220px;
+  flex: 1;
+}
+
+.mentor-img {
   width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.mentor-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.mentor-role {
   font-size: 14px;
+  color: gray;
+}
+
+/* Ensure Footer is pushed below the content */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1; /* Allows content to take full height and push footer down */
+  padding-bottom: 20px;
 }

@@ -62,6 +62,7 @@ nav a.active {
   gap: 15px;
 }
 
+
 /* Shopping Cart */
 .cart-container {
   position: relative;
@@ -69,12 +70,11 @@ nav a.active {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-size: 24px; /* Increase icon size */
 }
 
 .cart-container svg {
-  font-size: 20px;
-  color: #333;
-  transition: color 0.3s ease-in-out;
+  font-size: 30px; /* Specifically target the cart icon */
 }
 
 .cart-container:hover svg {
@@ -87,7 +87,7 @@ nav a.active {
   right: -5px;
   background: red;
   color: white;
-  font-size: 12px;
+  font-size: 10px;
   padding: 2px 6px;
   border-radius: 50%;
 }

@@ -1,8 +1,15 @@
 import React from "react";
 import "./Homepage.css";
-
+import S1 from "../assets/images/s1.png";
+import S2 from "../assets/images/S2.png";
+import S3 from "../assets/images/S3.png";
+import T1 from "../assets/images/t1.png";
+import T2 from "../assets/images/t2.png";
+import T3 from "../assets/images/t3.png";
+import T4 from "../assets/images/t4.png";
 const Homepage = () => {
   return (
+    
     <div className="homepage-container">
       <div className="search-section">
         <input
@@ -29,15 +36,15 @@ const Homepage = () => {
         
         <div className="testimonials-container">
           <div className="testimonial-card">
-            <img src="/assets/s1.png" alt="Learner" className="testimonial-img" />
+          <img src={S1} alt="Learner" className="testimonial-img" />
             <p className="testimonial-text">
               "This platform has transformed the way I learn. The courses are engaging and insightful!"
             </p>
-            <span className="testimonial-name">- John Doe</span>
+            <span className="testimonial-name">- Jerry David </span>
             <div className="star-rating">★★★★★</div>
           </div>
           <div className="testimonial-card">
-            <img src="/assets/s2.png" alt="Learner" className="testimonial-img" />
+          <img src={S2} alt="Learner" className="testimonial-img" />
             <p className="testimonial-text">
               "The instructors are amazing, and the content is top-notch!"
             </p>
@@ -45,7 +52,7 @@ const Homepage = () => {
             <div className="star-rating">★★★★☆</div>
           </div>
           <div className="testimonial-card">
-            <img src="/assets/s3.png" alt="Learner" className="testimonial-img" />
+          <img src={S3} alt="Learner" className="testimonial-img" />
             <p className="testimonial-text">
               "I highly recommend these courses to anyone looking to upskill."
             </p>
@@ -59,22 +66,22 @@ const Homepage = () => {
         <h3 className="text-xl font-bold text-center my-6">Our Top Mentors</h3>
         <div className="mentors-container">
           <div className="mentor-card">
-            <img src="/assets/mentor1.png" alt="Mentor" className="mentor-img" />
+          <img src={T1} alt="Mentor" className="mentor-img" />
             <p className="mentor-name">Dr. Emily Carter</p>
             <p className="mentor-role">Senior Data Scientist</p>
           </div>
           <div className="mentor-card">
-            <img src="/assets/mentor2.png" alt="Mentor" className="mentor-img" />
+          <img src={T2} alt="Mentor" className="mentor-img" />
             <p className="mentor-name">Prof. Michael Lee</p>
             <p className="mentor-role">AI & Machine Learning Expert</p>
           </div>
           <div className="mentor-card">
-            <img src="/assets/mentor3.png" alt="Mentor" className="mentor-img" />
+          <img src={T3} alt="Mentor" className="mentor-img" />
             <p className="mentor-name">Dr. Sophia Martinez</p>
             <p className="mentor-role">Cybersecurity Specialist</p>
           </div>
           <div className="mentor-card">
-            <img src="/assets/mentor4.png" alt="Mentor" className="mentor-img" />
+          <img src={T4} alt="Mentor" className="mentor-img" />
             <p className="mentor-name">John Doe</p>
             <p className="mentor-role">Full Stack Developer</p>
           </div>
