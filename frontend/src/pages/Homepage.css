@@ -32,10 +32,12 @@
 /* Text Sections */
 .text {
   margin: 10px;
+  color: black;
 }
 
 .text2 {
   margin-bottom: 10px;
+  color: black;
 }
 
 /* Button section */
@@ -81,6 +83,7 @@
   min-width: 250px;
   max-width: 300px;
   text-align: center;
+  color: black;
 }
 
 .testimonial-img {

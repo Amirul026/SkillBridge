@@ -70,7 +70,8 @@ nav a.active {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 24px; /* Increase icon size */
+  font-size: 24px; 
+  color: #1a1a52;
 }
 
 .cart-container svg {
@@ -78,7 +79,7 @@ nav a.active {
 }
 
 .cart-container:hover svg {
-  color: #1a1a52;
+  color: #28288b;
 }
 
 .cart-badge {
@@ -114,8 +115,8 @@ nav a.active {
 }
 
 .login-btn:hover {
-  background: black;
-  color: white;
+  background: whitesmoke;
+  color: black;
 }
 
 /* Register Button */
@@ -133,7 +134,9 @@ nav a.active {
 }
 
 .register-btn:hover {
-  background: #3333aa;
+  background: #2a2a87;
+  color: white;
+  border: 1px solid black;
 }
 
 /* Responsive Fix */
