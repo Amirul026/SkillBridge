@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\TestController;
-
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +18,11 @@ use App\Http\Controllers\TestController;
 Route::get('/test/{id}', [TestController::class, 'getTestHumanWithId']);
 Route::get('/test', function () {
     return response()->json(['message' => 'Backend connected successfully!']);
+});
+
+
+Route::get('/users', function () {
+    return response()->json(User::all());
 });
 
 
