@@ -6,33 +6,42 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Lcobucci\JWT\Token\Builder as JwtBuilder;
+use Lcobucci\JWT\Token\Builder;
 use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Token\Parser as JwtParser;
 use Lcobucci\JWT\Validation\Validator as JWTValidator;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use DateTimeImmutable;
 
 class AuthController extends Controller
 {
     protected function generateJwtToken($user, $expiresIn)
-    {
-        $signingKey = InMemory::plainText(config('app.jwt_secret'));
-        $now = new DateTimeImmutable();
-    
-        return (new JwtBuilder(new JoseEncoder())) // Pass only the JoseEncoder here
-            ->issuedAt($now)
-            ->expiresAt($now->modify("+{$expiresIn} seconds"))
-            ->withClaim('uid', $user->user_id)
-            ->withClaim('phone', $user->phone)
-            ->withClaim('picture', $user->picture)
-            ->withClaim('can_host', $user->can_host)
-            ->getToken(new Sha256(), $signingKey)  // Use the correct signer here
-            ->toString();
+{
+    $expiresIn = (int) $expiresIn;  // Ensure it's an integer
+    if ($expiresIn <= 0) {
+        $expiresIn = 3600;  // Fallback to 1 hour if invalid
     }
 
-    // User Registration
+    $signingKey = InMemory::plainText(config('app.jwt_secret'));
+    $now = new DateTimeImmutable();
+    $algorithm = new Sha256();
+
+    return (new Builder(new JoseEncoder(), ChainedFormatter::default()))
+        ->issuedAt($now)
+        ->expiresAt($now->modify("+{$expiresIn} seconds"))
+        ->withClaim('uid', $user->user_id)
+        ->withClaim('phone', $user->phone)
+        ->withClaim('picture', $user->picture)
+        ->withClaim('can_host', $user->can_host)
+        ->getToken($algorithm, $signingKey)
+        ->toString();
+}
+
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -54,13 +63,12 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'picture' => $request->picture,
-            'can_host' => $request->can_host ?? false,  
+            'can_host' => $request->can_host ?? false,
         ]);
 
         return response()->json(['message' => 'User registered successfully'], 201);
     }
 
-    // User Login
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -87,44 +95,65 @@ class AuthController extends Controller
         ]);
     }
 
-    // Refresh Token
     public function refreshToken(Request $request)
-    {
-        $tokenString = $request->header('Authorization');
+{
+    $tokenString = $request->header('Authorization');
 
-        if (!$tokenString) {
-            return response()->json(['error' => 'Token required'], 401);
-        }
-
-        try {
-            $parser = new Parser(new JoseEncoder());
-            $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
-
-            $signingKey = InMemory::plainText(config('app.jwt_secret'));
-            $validator = new JWTValidator();
-
-            if (!$validator->validate($token, new Sha256(), $signingKey)) {
-                return response()->json(['error' => 'Invalid token'], 403);
-            }
-
-            $user = User::find($token->claims()->get('uid'));
-
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-
-            $newAccessToken = $this->generateJwtToken($user, config('app.jwt_ttl'));
-
-            return response()->json(['access_token' => $newAccessToken]);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Token parsing error'], 401);
-        }
+    if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
+        return response()->json(['error' => 'Token required'], 401);
     }
 
-    // Logout
-    public function logout()
-    {
+    try {
+        $parser = new JwtParser(new JoseEncoder()); // FIXED
+        $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
+
+        $signingKey = InMemory::plainText(config('app.jwt_secret'));
+        $validator = new JWTValidator();
+
+        if (!$validator->validate($token, new SignedWith(new Sha256(), $signingKey))) {
+            return response()->json(['error' => 'Invalid token'], 403);
+        }
+
+        $user = User::find($token->claims()->get('uid'));
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $newAccessToken = $this->generateJwtToken($user, config('app.jwt_ttl'));
+
+        return response()->json(['access_token' => $newAccessToken]);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Token parsing error: ' . $e->getMessage()], 401);
+    }
+}
+
+public function logout(Request $request)
+{
+    $tokenString = $request->header('Authorization');
+
+    if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
+        return response()->json(['error' => 'Token required'], 401);
+    }
+
+    try {
+        $parser = new Parser(new JoseEncoder());
+        $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
+
+        $expiration = $token->claims()->get('exp');
+        if (!$expiration || $expiration < time()) {
+            return response()->json(['error' => 'Token already expired'], 401);
+        }
+
+        $tokenId = $token->claims()->get('jti');
+        \Cache::put('invalidated_token_' . $tokenId, true, now()->addMinutes(60));
+
         return response()->json(['message' => 'Logged out successfully']);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Token parsing error: ' . $e->getMessage()], 401);
     }
+}
+
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Validation\Validator as JWTValidator;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use App\Models\User;
@@ -18,8 +19,9 @@ class AuthMiddleware
     {
         $tokenString = $request->header('Authorization');
 
-        if (!$tokenString) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        // Check if the token is present
+        if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
+            return response()->json(['error' => 'Unauthorized: Token missing'], 401);
         }
 
         try {
@@ -27,19 +29,23 @@ class AuthMiddleware
             $parser = new Parser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
 
-            // Validate the token
+            // Validate the token signature
             $signingKey = InMemory::plainText(config('app.jwt_secret'));
             $validator = new JWTValidator();
 
-            if (!$validator->validate($token, new Sha256(), $signingKey)) {
-                return response()->json(['error' => 'Invalid token'], 403);
+            if (!$validator->validate($token, new SignedWith(new Sha256(), $signingKey))) {
+                return response()->json(['error' => 'Unauthorized: Invalid token signature'], 403);
             }
 
-            // Manually check if the token is expired
-            $now = new DateTimeImmutable();
-            $exp = $token->claims()->get('exp');
-            if ($exp && $now->getTimestamp() > $exp) {
-                return response()->json(['error' => 'Token has expired'], 401);
+            // Check if the token is expired
+            if ($token->isExpired(new DateTimeImmutable())) {
+                return response()->json(['error' => 'Unauthorized: Token has expired'], 401);
+            }
+
+            // Check if the token is blacklisted (optional)
+            $tokenId = $token->claims()->get('jti');
+            if (\Cache::has('invalidated_token_' . $tokenId)) {
+                return response()->json(['error' => 'Unauthorized: Token is invalidated'], 401);
             }
 
             // Find user by 'uid' claim
@@ -47,7 +53,7 @@ class AuthMiddleware
             $user = User::find($userId);
 
             if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
+                return response()->json(['error' => 'Unauthorized: User not found'], 404);
             }
 
             // Attach user to the request
@@ -59,7 +65,7 @@ class AuthMiddleware
             // Log the error for debugging purposes
             \Log::error('Token error: ' . $e->getMessage());
 
-            return response()->json(['error' => 'Token error'], 401);
+            return response()->json(['error' => 'Unauthorized: ' . $e->getMessage()], 401);
         }
     }
 }
