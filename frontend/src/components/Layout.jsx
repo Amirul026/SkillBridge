@@ -1,59 +1,125 @@
-import { useState } from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ShoppingCart, Sun, Moon } from 'lucide-react';
 
 const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDarkMode(darkModeQuery.matches);
+
+    const handleDarkModeChange = (e) => setIsDarkMode(e.matches);
+    darkModeQuery.addEventListener('change', handleDarkModeChange);
+
+    return () => darkModeQuery.removeEventListener('change', handleDarkModeChange);
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       {/* Header */}
-      <header className="bg-white shadow-sm fixed w-full top-0 z-50">
+      <header className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm fixed w-full top-0 z-50`}>
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center">
-          <div className="text-2xl font-bold text-[#1e1a53] pl-8">SkillBridge</div>
-
+            <div className={`text-2xl font-bold pl-8 ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+              SkillBridge
+            </div>
 
             <button 
               className="md:hidden ml-auto"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-6 h-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
 
             <div className="hidden md:flex items-center justify-center space-x-8 flex-1">
-              <a href="/" className="text-[#1e1a53]">Home</a>
-              <a href="/seminar" className="text-[#1e1a53]">Seminar</a>
-              <a href="/courses" className="text-[#1e1a53]">Courses</a>
-              <a href="/mentor" className="text-[#1e1a53]">Mentor</a>
-              <ShoppingCart className="text-[#1e1a53] cursor-pointer" />
-
+              <a href="/" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Home
+              </a>
+              <a href="/seminar" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Seminar
+              </a>
+              <a href="/courses" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Courses
+              </a>
+              <a href="/mentor" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Mentor
+              </a>
+              <ShoppingCart className={`cursor-pointer hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`} />
             </div>
 
             <div className="hidden md:flex items-center space-x-4 pl-8">
-            <button className="px-4 py-2 text-[#1e1a53] border border-[#1e1a53] rounded hover:bg-[#1e1a53]/10">
-             Login
-            </button>
-            <button className="px-4 py-2 bg-[#1e1a53] text-white rounded hover:bg-[#1e1a53]/90">
-            Register
-           </button>
-
+              <button
+                onClick={toggleTheme}
+                className={`p-2 rounded-full transition-colors ${
+                  isDarkMode 
+                    ? 'text-white hover:bg-gray-700' 
+                    : 'text-[#1e1a53] hover:bg-gray-100'
+                }`}
+              >
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
+              <button className={`px-4 py-2 rounded transition-colors ${
+                isDarkMode 
+                  ? 'text-white border-white hover:bg-gray-700' 
+                  : 'text-[#1e1a53] border-[#1e1a53] hover:bg-[#1e1a53]/10'
+              } border`}>
+                Login
+              </button>
+              <button className={`px-4 py-2 rounded transition-colors ${
+                isDarkMode 
+                  ? 'bg-white text-gray-900 hover:bg-gray-200' 
+                  : 'bg-[#1e1a53] text-white hover:bg-[#1e1a53]/90'
+              }`}>
+                Register
+              </button>
             </div>
           </div>
 
           <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} pt-4`}>
-            <div className="flex flex-col space-y-4">
-              <a href="/" className="text-blue-600">Home</a>
-              <a href="/seminar" className="hover:text-blue-600">Seminar</a>
-              <a href="/courses" className="hover:text-blue-600">Courses</a>
-              <a href="/mentor" className="hover:text-blue-600">Mentor</a>
+            <div className={`flex flex-col space-y-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <a href="/" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Home
+              </a>
+              <a href="/seminar" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Seminar
+              </a>
+              <a href="/courses" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Courses
+              </a>
+              <a href="/mentor" className={`hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`}>
+                Mentor
+              </a>
               <div className="flex items-center space-x-4">
-                <ShoppingCart className="hover:text-blue-600 cursor-pointer" />
-                <button className="px-4 py-2 text-blue-600 border border-blue-600 rounded hover:bg-blue-50">
+                <ShoppingCart className={`cursor-pointer hover:opacity-80 transition-opacity ${isDarkMode ? 'text-white' : 'text-[#1e1a53]'}`} />
+                <button
+                  onClick={toggleTheme}
+                  className={`p-2 rounded-full transition-colors ${
+                    isDarkMode 
+                      ? 'text-white hover:bg-gray-700' 
+                      : 'text-[#1e1a53] hover:bg-gray-100'
+                  }`}
+                >
+                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
+                <button className={`px-4 py-2 rounded transition-colors ${
+                  isDarkMode 
+                    ? 'text-white border-white hover:bg-gray-700' 
+                    : 'text-[#1e1a53] border-[#1e1a53] hover:bg-[#1e1a53]/10'
+                } border`}>
                   Login
                 </button>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                <button className={`px-4 py-2 rounded transition-colors ${
+                  isDarkMode 
+                    ? 'bg-white text-gray-900 hover:bg-gray-200' 
+                    : 'bg-[#1e1a53] text-white hover:bg-[#1e1a53]/90'
+                }`}>
                   Register
                 </button>
               </div>
@@ -68,7 +134,7 @@ const Layout = ({ children }) => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-20">
+      <footer className={`${isDarkMode ? 'bg-gray-800' : 'bg-gray-900'} text-white mt-20`}>
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
