@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import HomePage from './pages/Homepage';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
 
 const App = () => {
   return (
@@ -13,6 +14,8 @@ const App = () => {
             <Route path="/" element={<HomePage isDarkMode={isDarkMode} />} />
             <Route path="/register" element={<Register isDarkMode={isDarkMode} />} />
             <Route path="/login" element={<Login isDarkMode={isDarkMode} />} />
+            <Route path="/forgot-password" element={<ForgotPassword isDarkMode={isDarkMode} />} />
+          
             <Route path="/seminar" element={<div>Seminar Page</div>} />
             <Route path="/courses" element={<div>Courses Page</div>} />
             <Route path="/mentor" element={<div>Mentor Page</div>} />
