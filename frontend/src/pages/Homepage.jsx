@@ -7,6 +7,7 @@ import T1 from "../assets/images/t1.png";
 import T2 from "../assets/images/t2.png";
 import T3 from "../assets/images/t3.png";
 import T4 from "../assets/images/t4.png";
+
 const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -69,13 +70,11 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-
-
+    <div className="min-h-screen bg-white w-full">
       {/* Main Content */}
-      <main className="pt-16">
+      <main className="pt-16 w-full">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-blue-50 to-white pt-20 pb-20">
+        <section className="bg-white pt-20 pb-20 w-full">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center space-y-8">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
@@ -95,54 +94,54 @@ const HomePage = () => {
                   <Search className="absolute right-3 top-3 text-gray-400" />
                 </div>
                 <button className="px-6 py-3 bg-[#1e1a53] text-white rounded-r hover:bg-[#1e1a53]/90 transition duration-300">
-               Search
-             </button>
-
+                  Search
+                </button>
               </div>
               
               <button className="px-8 py-3 bg-[#1e1a53] text-white rounded-full hover:bg-[#1e1a53]/90 transition duration-300 inline-block">
-             Visit Courses
-           </button>
-
+                Visit Courses
+              </button>
             </div>
           </div>
         </section>
 
         {/* Testimonials Section */}
-        <section className="container mx-auto px-4 py-20">
-          <h2 className="text-3xl font-bold text-center mb-12">What Our Learners Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map(testimonial => (
-              <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-                <div className="flex items-center space-x-4 mb-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full"
-                  />
-                  <div>
-                    <h4 className="font-semibold">{testimonial.name}</h4>
-                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
+        <section className="w-full bg-white py-20">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">What Our Learners Say</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {testimonials.map(testimonial => (
+                <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <div>
+                      <h4 className="font-semibold">{testimonial.name}</h4>
+                      <p className="text-gray-600 text-sm">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 mb-4">{testimonial.text}</p>
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-5 h-5 ${
+                          i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4">{testimonial.text}</p>
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-5 h-5 ${
-                        i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Why Choose Us Section */}
-        <section className="bg-gray-50 py-20">
+        <section className="w-full bg-white py-20">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Why Choose Us?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -178,28 +177,29 @@ const HomePage = () => {
         </section>
 
         {/* Top Mentors Section */}
-        <section className="container mx-auto px-4 py-20">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Top Mentors</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {mentors.map(mentor => (
-              <div key={mentor.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 text-center">
-                <img
-                  src={mentor.image}
-                  alt={mentor.name}
-                  className="w-24 h-24 rounded-full mx-auto mb-4"
-                />
-                <h4 className="font-semibold">{mentor.name}</h4>
-                <p className="text-gray-600 text-sm mb-2">{mentor.expertise}</p>
-                <div className="flex items-center justify-center">
-                  <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                  <span className="ml-1">{mentor.rating}</span>
+        <section className="w-full bg-white py-20">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">Our Top Mentors</h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              {mentors.map(mentor => (
+                <div key={mentor.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 text-center">
+                  <img
+                    src={mentor.image}
+                    alt={mentor.name}
+                    className="w-24 h-24 rounded-full mx-auto mb-4"
+                  />
+                  <h4 className="font-semibold">{mentor.name}</h4>
+                  <p className="text-gray-600 text-sm mb-2">{mentor.expertise}</p>
+                  <div className="flex items-center justify-center">
+                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                    <span className="ml-1">{mentor.rating}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
       </main>
-
     </div>
   );
 };
