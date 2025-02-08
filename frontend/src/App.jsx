@@ -3,16 +3,16 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/Homepage';
 
-
 const App = () => {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path="/" element={
+          <Layout>
+            {({ isDarkMode }) => <HomePage isDarkMode={isDarkMode} />}
+          </Layout>
+        } />
+      </Routes>
     </Router>
   );
 };
