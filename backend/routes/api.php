@@ -30,8 +30,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
 
 Route::middleware(['auth.jwt'])->group(function () {
-    Route::get('/profile', function () {
-        return response()->json(['message' => 'Welcome to your profile']);
-    });
+    Route::get('/profile', [AuthController::class, 'getProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
