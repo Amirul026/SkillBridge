@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Sun, Moon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -17,6 +19,16 @@ const Layout = ({ children }) => {
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+    setIsMenuOpen(false); // Close mobile menu if open
+  };
+
+  const handleRegister = () => {
+    navigate('/register');
+    setIsMenuOpen(false); // Close mobile menu if open
   };
 
   return (
@@ -63,18 +75,24 @@ const Layout = ({ children }) => {
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
-              <button className={`px-4 py-2 rounded transition-colors ${
-                isDarkMode 
-                  ? 'bg-gray-700 text-white hover:bg-gray-600' 
-                  : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'
-              } border`}>
+              <button 
+                onClick={handleLogin}
+                className={`px-4 py-2 rounded transition-colors ${
+                  isDarkMode 
+                    ? 'bg-gray-700 text-white hover:bg-gray-600' 
+                    : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'
+                } border`}
+              >
                 Login
               </button>
-              <button className={`px-4 py-2 rounded transition-colors ${
-                isDarkMode 
-                  ? 'bg-white text-gray-900 hover:bg-gray-100' 
-                  : 'bg-[#1e1a53] text-white hover:bg-[#1e1a53]/90'
-              }`}>
+              <button 
+                onClick={handleRegister}
+                className={`px-4 py-2 rounded transition-colors ${
+                  isDarkMode 
+                    ? 'bg-white text-gray-900 hover:bg-gray-100' 
+                    : 'bg-[#1e1a53] text-white hover:bg-[#1e1a53]/90'
+                }`}
+              >
                 Register
               </button>
             </div>
@@ -92,8 +110,18 @@ const Layout = ({ children }) => {
                 <button onClick={toggleTheme} className="p-2">
                   {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                 </button>
-                <button className="px-4 py-2 rounded border">Login</button>
-                <button className="px-4 py-2 rounded bg-[#1e1a53] text-white">Register</button>
+                <button 
+                  onClick={handleLogin}
+                  className="px-4 py-2 rounded border"
+                >
+                  Login
+                </button>
+                <button 
+                  onClick={handleRegister}
+                  className="px-4 py-2 rounded bg-[#1e1a53] text-white"
+                >
+                  Register
+                </button>
               </div>
             </div>
           </div>
