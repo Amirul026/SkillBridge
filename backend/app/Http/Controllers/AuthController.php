@@ -50,6 +50,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
             'phone' => 'required|string|unique:users',
             'picture' => 'nullable|url',
+            'role' => 'required|string|in:Admin,Mentor,Learner',
             'can_host' => 'nullable|boolean',
         ]);
 
@@ -63,6 +64,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'picture' => $request->picture,
+            'role' => $request->role, 
             'can_host' => $request->can_host ?? false,
         ]);
 
@@ -205,5 +207,81 @@ public function getProfile(Request $request)
         return response()->json(['error' => 'Token parsing error: ' . $e->getMessage()], 401);
     }
 }
+public function updateProfile(Request $request)
+{
+    $tokenString = $request->header('Authorization');
+
+    if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
+        return response()->json(['error' => 'Token required'], 401);
+    }
+
+    try {
+        // Parse and validate the token
+        $parser = new JwtParser(new JoseEncoder());
+        $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
+
+        $signingKey = InMemory::plainText(config('app.jwt_secret'));
+        $validator = new JWTValidator();
+
+        if (!$validator->validate($token, new SignedWith(new Sha256(), $signingKey))) {
+            return response()->json(['error' => 'Invalid token'], 403);
+        }
+
+        // Get user from token
+        $userId = $token->claims()->get('uid');
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Validate the input
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
+            'phone' => 'sometimes|required|string|unique:users,phone,' . $user->user_id . ',user_id',
+            'picture' => 'nullable|url',
+            'password' => 'nullable|string|min:6',
+            'role' => 'sometimes|required|string|in:Admin,Mentor,Learner',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        // Update user fields
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+
+        if ($request->has('phone')) {
+            $user->phone = $request->phone;
+        }
+
+        if ($request->has('picture')) {
+            $user->picture = $request->picture;
+        }
+
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($request->has('role')) {
+            $user->role = $request->role;
+        }
+
+        $user->save();
+
+        return response()->json(['message' => 'Profile updated successfully'], 200);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+    }
+}
+
 
 }
