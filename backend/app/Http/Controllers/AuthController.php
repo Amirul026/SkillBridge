@@ -138,14 +138,17 @@ public function logout(Request $request)
     }
 
     try {
-        $parser = new Parser(new JoseEncoder());
+        // Parse the token
+        $parser = new JwtParser(new JoseEncoder());
         $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
 
+        // Get the expiration time as a DateTimeImmutable object
         $expiration = $token->claims()->get('exp');
-        if (!$expiration || $expiration < time()) {
+        if (!$expiration || $expiration->getTimestamp() < time()) {
             return response()->json(['error' => 'Token already expired'], 401);
         }
 
+        // Invalidate the token by storing its ID in the cache
         $tokenId = $token->claims()->get('jti');
         \Cache::put('invalidated_token_' . $tokenId, true, now()->addMinutes(60));
 
@@ -155,5 +158,6 @@ public function logout(Request $request)
         return response()->json(['error' => 'Token parsing error: ' . $e->getMessage()], 401);
     }
 }
+
 
 }

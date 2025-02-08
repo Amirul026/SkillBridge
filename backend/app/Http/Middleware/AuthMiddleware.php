@@ -4,9 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Token\Parser as JwtParser;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Validation\Validator as JWTValidator;
+use Lcobucci\JWT\Validation\Validator;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -26,25 +26,26 @@ class AuthMiddleware
 
         try {
             // Parse the token
-            $parser = new Parser(new JoseEncoder());
+            $parser = new JwtParser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
 
             // Validate the token signature
-            $signingKey = InMemory::plainText(config('app.jwt_secret'));
-            $validator = new JWTValidator();
+            $signingKey = InMemory::plainText(env('JWT_SECRET'));
+            $validator = new Validator();
 
             if (!$validator->validate($token, new SignedWith(new Sha256(), $signingKey))) {
                 return response()->json(['error' => 'Unauthorized: Invalid token signature'], 403);
             }
 
             // Check if the token is expired
-            if ($token->isExpired(new DateTimeImmutable())) {
+            $expiration = $token->claims()->get('exp');
+            if (is_numeric($expiration) && $expiration <= time()) {
                 return response()->json(['error' => 'Unauthorized: Token has expired'], 401);
             }
 
             // Check if the token is blacklisted (optional)
             $tokenId = $token->claims()->get('jti');
-            if (\Cache::has('invalidated_token_' . $tokenId)) {
+            if ($tokenId && \Cache::has('invalidated_token_' . $tokenId)) {
                 return response()->json(['error' => 'Unauthorized: Token is invalidated'], 401);
             }
 
@@ -60,7 +61,6 @@ class AuthMiddleware
             $request->attributes->add(['user' => $user]);
 
             return $next($request);
-
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             \Log::error('Token error: ' . $e->getMessage());
