@@ -4,6 +4,7 @@ import HomePage from './pages/Homepage';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
+import CoursesPage from './pages/CoursesPage';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
             <Route path="/register" element={<Register isDarkMode={isDarkMode} />} />
             <Route path="/login" element={<Login isDarkMode={isDarkMode} />} />
             <Route path="/forgot-password" element={<ForgotPassword isDarkMode={isDarkMode} />} />
+            <Route path="/courses" element={<CoursesPage isDarkMode={isDarkMode} />} />
           
             <Route path="/seminar" element={<div>Seminar Page</div>} />
             <Route path="/courses" element={<div>Courses Page</div>} />
