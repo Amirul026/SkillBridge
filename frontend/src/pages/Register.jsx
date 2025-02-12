@@ -82,7 +82,7 @@ const Register = ({ isDarkMode }) => {
                       className={`mt-1 block w-full rounded-md shadow-sm ${
                         isDarkMode 
                           ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : 'border-gray-300 focus:border-blue-500'
+                          : 'bg-gray-200 border-gray-300 focus:border-blue-500'
                       } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -101,7 +101,7 @@ const Register = ({ isDarkMode }) => {
                       className={`mt-1 block w-full rounded-md shadow-sm ${
                         isDarkMode 
                           ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : 'border-gray-300 focus:border-blue-500'
+                          : 'bg-gray-200 border-gray-300 focus:border-blue-500'
                       } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -122,7 +122,7 @@ const Register = ({ isDarkMode }) => {
                       className={`mt-1 block w-full rounded-md shadow-sm ${
                         isDarkMode 
                           ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : 'border-gray-300 focus:border-blue-500'
+                          : ' bg-gray-200 border-gray-300 focus:border-blue-500'
                       } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
@@ -141,7 +141,7 @@ const Register = ({ isDarkMode }) => {
                       className={`mt-1 block w-full rounded-md shadow-sm ${
                         isDarkMode 
                           ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : 'border-gray-300 focus:border-blue-500'
+                          : 'bg-gray-200 border-gray-300 focus:border-blue-500'
                       } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
@@ -161,7 +161,7 @@ const Register = ({ isDarkMode }) => {
                     className={`mt-1 block w-full rounded-md shadow-sm ${
                       isDarkMode 
                         ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                        : 'border-gray-300 focus:border-blue-500'
+                        : 'bg-gray-200 border-gray-300 focus:border-blue-500'
                     } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
