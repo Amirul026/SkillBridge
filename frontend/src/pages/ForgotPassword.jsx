@@ -86,7 +86,7 @@ const ForgotPassword = ({ isDarkMode }) => {
                             className={`block w-full pl-10 rounded-lg shadow-sm ${
                               isDarkMode 
                                 ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                                : 'border-gray-300 focus:border-blue-500'
+                                : 'bg-gray-200 border-gray-300 focus:border-blue-500'
                             } px-3 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}

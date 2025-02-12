@@ -4,18 +4,27 @@ import { useNavigate } from 'react-router-dom';
 
 const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Initialize dark mode from localStorage or system preference
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode !== null) {
+      return JSON.parse(savedMode);
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDarkMode(darkModeQuery.matches);
-
-    const handleDarkModeChange = (e) => setIsDarkMode(e.matches);
-    darkModeQuery.addEventListener('change', handleDarkModeChange);
-
-    return () => darkModeQuery.removeEventListener('change', handleDarkModeChange);
-  }, []);
+    // Update localStorage whenever dark mode changes
+    localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+    
+    // Apply dark mode class to document for global styling
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -23,12 +32,12 @@ const Layout = ({ children }) => {
 
   const handleLogin = () => {
     navigate('/login');
-    setIsMenuOpen(false); // Close mobile menu if open
+    setIsMenuOpen(false);
   };
 
   const handleRegister = () => {
     navigate('/register');
-    setIsMenuOpen(false); // Close mobile menu if open
+    setIsMenuOpen(false);
   };
 
   return (
@@ -72,6 +81,7 @@ const Layout = ({ children }) => {
                 className={`p-2 rounded-full transition-colors ${
                   isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'
                 }`}
+                aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
@@ -107,12 +117,18 @@ const Layout = ({ children }) => {
               <a href="/mentor" className="hover:opacity-80 transition-opacity">Mentor</a>
               <div className="flex items-center space-x-4">
                 <ShoppingCart className="cursor-pointer hover:opacity-80 transition-opacity" />
-                <button onClick={toggleTheme} className="p-2">
+                <button 
+                  onClick={toggleTheme} 
+                  className="p-2"
+                  aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
                   {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                 </button>
                 <button 
                   onClick={handleLogin}
-                  className="px-4 py-2 rounded border"
+                  className={`px-4 py-2 rounded border ${
+                    isDarkMode ? 'border-gray-700 text-white' : 'border-gray-200'
+                  }`}
                 >
                   Login
                 </button>
@@ -134,7 +150,7 @@ const Layout = ({ children }) => {
       </main>
 
       {/* Footer */}
-      <footer className={`${isDarkMode ? 'bg-gray-900' : 'bg-gray-900'} text-white`}>
+      <footer className={`${isDarkMode ? 'bg-black' : 'bg-gray-900'} text-white`}>
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>

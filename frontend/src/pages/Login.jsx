@@ -68,7 +68,7 @@ const Login = ({ isDarkMode }) => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Email */}
                   <div>
-                    <label htmlFor="email" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                    <label htmlFor="email" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200 ' : 'text-gray-700'}`}>
                       Email Address
                     </label>
                     <div className="mt-1 relative">
@@ -82,7 +82,7 @@ const Login = ({ isDarkMode }) => {
                         className={`block w-full pl-10 rounded-lg shadow-sm ${
                           isDarkMode 
                             ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                            : 'border-gray-300 focus:border-blue-500'
+                            : ' bg-gray-200 border-gray-300 focus:border-blue-500'
                         } px-3 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -107,7 +107,7 @@ const Login = ({ isDarkMode }) => {
                         className={`block w-full pl-10 rounded-lg shadow-sm ${
                           isDarkMode 
                             ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                            : 'border-gray-300 focus:border-blue-500'
+                            : ' bg-gray-200 border-gray-300 focus:border-blue-500'
                         } px-3 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                         value={formData.password}
                         onChange={(e) => setFormData({...formData, password: e.target.value})}
