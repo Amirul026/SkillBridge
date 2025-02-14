@@ -23,7 +23,7 @@ class AuthController extends Controller
 {
     $expiresIn = (int) $expiresIn;  // Ensure it's an integer
     if ($expiresIn <= 0) {
-        $expiresIn = 3600;  // Fallback to 1 hour if invalid
+       $expiresIn = 3600;  // Fallback to 1 hour if invalid
     }
 
     $signingKey = InMemory::plainText(config('app.jwt_secret'));
