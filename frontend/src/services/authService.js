@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 export const register = async (userData) => {
   try {
     const response = await api.post("/register", userData);
-    toast.success("Registration successful!");
+    toast.success("Registration successful! Redirecting to login...");
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.error || "Registration failed!");
@@ -29,7 +29,7 @@ export const login = async (credentials) => {
       secure: true,
     });
 
-    toast.success("Login successful!");
+    toast.success("Login successful! Redirecting to Profile...");
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.error || "Login failed!");

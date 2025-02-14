@@ -11,16 +11,15 @@ const Login = ({ isDarkMode }) => {
   });
 
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Redirect after login
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await login(formData); // Call the login API
-      toast.success("Login successful! Redirecting...");
-      navigate("/profile"); // Redirect to profile page after login
+      await login(formData);   
+      navigate("/profile");
     } catch (error) {
       toast.error(error.response?.data?.error || "Login failed!");
     } finally {

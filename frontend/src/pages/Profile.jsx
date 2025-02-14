@@ -31,7 +31,6 @@ const Profile = () => {
       await updateProfile(formData);
       setUser(formData);
       setEditMode(false);
-      toast.success("Profile updated successfully!");
     } catch (error) {
       toast.error("Failed to update profile.");
     }
@@ -40,8 +39,7 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      toast.success("Logged out successfully!");
-      navigate("/login"); // Redirect to login page
+      navigate("/login"); 
     } catch (error) {
       toast.error("Logout failed.");
     }
