@@ -1,0 +1,65 @@
+.profile-container {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.profile-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.profile-details p {
+  margin: 10px 0;
+}
+
+.profile-form input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.edit-button,
+.logout-button,
+.update-button,
+.cancel-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #1e1a53;
+  color: white;
+}
+
+.logout-button {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.update-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+}
