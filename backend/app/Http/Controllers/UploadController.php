@@ -2,27 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UploadService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UploadController extends Controller
 {
+    protected $uploadService;
+
+    public function __construct(UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
+    }
+
     public function upload(Request $request)
     {
-        // Validate the uploaded file
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        // Validate that a file is provided under the "picture" key
+        $validator = Validator::make($request->all(), [
+            'picture' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Upload the file using the Cloudinary disk
-        $path = Storage::disk('cloudinary')->putFile('', $request->file('image'));
-        
-        // Generate the URL for the uploaded file
-        $url = Storage::disk('cloudinary')->url($path);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-        return response()->json([
-            'message'   => 'Upload successful!',
-            'image_url' => $url,
-        ]);
+        try {
+            // Get the file from the request (using key "picture")
+            $file = $request->file('picture');
+            // Upload the file via the UploadService
+            $uploadResult = $this->uploadService->uploadFile($file);
+
+            if ($uploadResult['success']) {
+                return response()->json([
+                    'message' => 'File uploaded successfully',
+                    'data'    => $uploadResult['data']
+                ], 200);
+            } else {
+                return response()->json(['error' => $uploadResult['message'] ?? 'File upload failed'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred during upload: ' . $e->getMessage()], 500);
+        }
     }
 }
