@@ -18,50 +18,85 @@ const Register = ({ isDarkMode }) => {
   const passwordRef = useRef(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [photo, setPhoto] = useState(null);
+
   
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
+    if (!file) return;
+
+    setFormData({ ...formData, picture_file: file });
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
         setPhotoPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
     }
-  };
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+};
+  
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-     if (formData.password !== formData.confirmPassword) {
+  if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match!");
       setFormData((prevData) => ({
-        ...prevData,
-        password: "", // Clear password fields
-        confirmPassword: "",
+          ...prevData,
+          password: "",
+          confirmPassword: "",
       }));
-      passwordRef.current.focus(); // Focus on the password input
+      passwordRef.current.focus();
       setLoading(false);
       return;
-    }
-    try {
+  }
+
+  try {
+      let pictureUrl = null;
+
+      // *** Make the upload request ONLY ONCE ***
+      if (formData.picture_file) {
+          const fileUploadFormData = new FormData();
+          fileUploadFormData.append('picture_file', formData.picture_file);
+
+          const uploadResponse = await fetch('http://127.0.0.1:8000/api/upload', {
+              method: 'POST',
+              body: fileUploadFormData,
+          });
+
+          if (!uploadResponse.ok) {
+              const errorData = await uploadResponse.json();
+              console.error("Upload Error:", errorData);
+              throw new Error(errorData.message || "Image upload failed!");
+          }
+
+          const uploadData = await uploadResponse.json();
+          pictureUrl = uploadData.data.url;
+          console.log("Picture URL:", pictureUrl);  // Log the URL
+      }
+
+      // Now, make the registration request (only after the upload)
       await register({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-        role: formData.role,
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          role: formData.role,
+          picture: pictureUrl, // Include the URL here
       });
+
       setTimeout(() => navigate("/login"), 2000);
-    } catch (error) {
-      toast.error(error.response?.data?.error || "Registration failed!");
-    }finally{
+
+  } catch (error) {
+      console.error("Registration Error:", error);
+      toast.error(error.response?.data?.error || error.message || "Registration failed!"); // Improved error message
+  } finally {
       setLoading(false);
-    }
-    
-  };
+  }
+};
 
   return (
     <div className={`min-h-screen py-8 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>

@@ -17,9 +17,9 @@ class UploadController extends Controller
 
     public function upload(Request $request)
     {
-        // Validate that a file is provided under the "picture" key
+        // Validate that a file is provided under the "picture_file" key
         $validator = Validator::make($request->all(), [
-            'picture' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'picture_file' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -27,8 +27,8 @@ class UploadController extends Controller
         }
 
         try {
-            // Get the file from the request (using key "picture")
-            $file = $request->file('picture');
+            // Get the file from the request (using key "picture_file")
+            $file = $request->file('picture_file');
             // Upload the file via the UploadService
             $uploadResult = $this->uploadService->uploadFile($file);
 

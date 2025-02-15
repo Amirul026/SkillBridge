@@ -45,13 +45,12 @@ class AuthService
 
     public function register($data)
     {
-        // Validate input. Note: we expect the file under 'picture_file' (not 'picture')
+        
         $validator = Validator::make($data, [
             'name'          => 'required|string|max:255',
             'email'         => 'required|string|email|max:255|unique:users',
             'password'      => 'required|string|min:6',
             'phone'         => 'required|string|unique:users',
-            // Validate that if a file is uploaded, it meets the file criteria.
             'picture_file'  => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'role'          => 'required|string|in:Admin,Mentor,Learner',
             'can_host'      => 'nullable|boolean',
@@ -60,23 +59,24 @@ class AuthService
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-    
-        // If a file was uploaded, process it
+        //\Log::info("Data received for registration:", $data);
+        
         if (isset($data['picture_file'])) {
-            // Use the UploadService to handle the file upload
+            
             $uploadResult = app(\App\Services\UploadService::class)->uploadFile($data['picture_file']);
             if ($uploadResult['success']) {
-                // Overwrite the 'picture' field with the Cloudinary URL
-                $data['picture'] = $uploadResult['data']['url'];
+                
+                $data['picture_file'] = $uploadResult['data']['url'];
             } else {
-                // If upload failed, you can set it to null or handle the error as needed
-                $data['picture'] = null;
+                
+                $data['picture_file'] = null;
             }
         } else {
-            $data['picture'] = null;
+            $data['picture_file'] = null;
         }
+        //\Log::info("Data received for registration:", $data);
     
-        // Create the user record with the updated data
+        
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
