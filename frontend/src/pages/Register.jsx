@@ -1,6 +1,9 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState,useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Upload, Rocket, BookOpen, Users, Award } from 'lucide-react';
+import { register } from '../services/authService';
+import { toast } from 'react-toastify';
+
 
 const Register = ({ isDarkMode }) => {
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -12,6 +15,10 @@ const Register = ({ isDarkMode }) => {
     phone: '',
     role: 'Learner'
   });
+  const passwordRef = useRef(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -24,9 +31,36 @@ const Register = ({ isDarkMode }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    setLoading(true);
+
+     if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match!");
+      setFormData((prevData) => ({
+        ...prevData,
+        password: "", // Clear password fields
+        confirmPassword: "",
+      }));
+      passwordRef.current.focus(); // Focus on the password input
+      setLoading(false);
+      return;
+    }
+    try {
+      await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        role: formData.role,
+      });
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Registration failed!");
+    }finally{
+      setLoading(false);
+    }
+    
   };
 
   return (
@@ -119,6 +153,7 @@ const Register = ({ isDarkMode }) => {
                       type="password"
                       id="password"
                       required
+                      ref={passwordRef}
                       className={`mt-1 block w-full rounded-md shadow-sm ${
                         isDarkMode 
                           ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
@@ -171,7 +206,7 @@ const Register = ({ isDarkMode }) => {
                 {/* Role Selection */}
                 <div>
                   <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                    I want to
+                    I want to be
                   </label>
                   <div className="mt-2 space-x-4">
                     {['Learner', 'Mentor'].map((role) => (
@@ -196,8 +231,9 @@ const Register = ({ isDarkMode }) => {
                 <button
                   type="submit"
                   className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#1e1a53] hover:bg-[#1e1a53]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  disabled={loading}
                 >
-                  Create Account
+                  {loading ? "Registering..." : "Create Account"}
                 </button>
               </form>
 
