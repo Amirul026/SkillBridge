@@ -15,6 +15,7 @@ use Lcobucci\JWT\Validation\Validator as JWTValidator;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -44,32 +45,51 @@ class AuthService
 
     public function register($data)
     {
+        
         $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-            'phone' => 'required|string|unique:users',
-            'picture' => 'nullable|url',
-            'role' => 'required|string|in:Admin,Mentor,Learner',
-            'can_host' => 'nullable|boolean',
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|string|email|max:255|unique:users',
+            'password'      => 'required|string|min:6',
+            'phone'         => 'required|string|unique:users',
+            'picture_file'  => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'role'          => 'required|string|in:Admin,Mentor,Learner',
+            'can_host'      => 'nullable|boolean',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
+        //\Log::info("Data received for registration:", $data);
+        
+        if (isset($data['picture_file'])) {
+            
+            $uploadResult = app(\App\Services\UploadService::class)->uploadFile($data['picture_file']);
+            if ($uploadResult['success']) {
+                
+                $data['picture_file'] = $uploadResult['data']['url'];
+            } else {
+                
+                $data['picture_file'] = null;
+            }
+        } else {
+            $data['picture_file'] = null;
+        }
+        //\Log::info("Data received for registration:", $data);
+    
+        
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name'     => $data['name'],
+            'email'    => $data['email'],
             'password' => Hash::make($data['password']),
-            'phone' => $data['phone'],
-            'picture' => $data['picture'],
-            'role' => $data['role'],
+            'phone'    => $data['phone'],
+            'picture'  => $data['picture'],
+            'role'     => $data['role'],
             'can_host' => $data['can_host'] ?? false,
         ]);
-
+    
         return response()->json(['message' => 'User registered successfully'], 201);
     }
+    
 
     public function login($data)
     {

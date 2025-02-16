@@ -15,6 +15,7 @@ const Profile = () => {
       try {
         const userData = await getProfile();
         setUser(userData);
+        console.log("User data from getProfile:", userData); // Log the user data
         setFormData(userData);
       } catch (error) {
         toast.error("Failed to load profile.");
