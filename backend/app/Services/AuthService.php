@@ -51,7 +51,7 @@ class AuthService
             'email'         => 'required|string|email|max:255|unique:users',
             'password'      => 'required|string|min:6',
             'phone'         => 'required|string|unique:users',
-            'picture_file'  => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            //'picture_file'  => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'role'          => 'required|string|in:Admin,Mentor,Learner',
             'can_host'      => 'nullable|boolean',
         ]);
@@ -61,19 +61,19 @@ class AuthService
         }
         //\Log::info("Data received for registration:", $data);
         
-        if (isset($data['picture_file'])) {
+        // if (isset($data['picture_file'])) {
             
-            $uploadResult = app(\App\Services\UploadService::class)->uploadFile($data['picture_file']);
-            if ($uploadResult['success']) {
+        //     $uploadResult = app(\App\Services\UploadService::class)->uploadFile($data['picture_file']);
+        //     if ($uploadResult['success']) {
                 
-                $data['picture_file'] = $uploadResult['data']['url'];
-            } else {
+        //         $data['picture_file'] = $uploadResult['data']['url'];
+        //     } else {
                 
-                $data['picture_file'] = null;
-            }
-        } else {
-            $data['picture_file'] = null;
-        }
+        //         $data['picture_file'] = null;
+        //     }
+        // } else {
+        //     $data['picture_file'] = null;
+        // }
         //\Log::info("Data received for registration:", $data);
     
         

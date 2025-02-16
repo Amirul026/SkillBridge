@@ -37,6 +37,4 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/profile/update', [AuthController::class, 'updateProfile']);
 });
-
-
 Route::post('/upload', [UploadController::class, 'upload']);
