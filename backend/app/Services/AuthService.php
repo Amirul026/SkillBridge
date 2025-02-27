@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Lcobucci\JWT\Token\Builder;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -16,8 +15,6 @@ use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-
-
 
 class AuthService
 {
@@ -45,44 +42,13 @@ class AuthService
 
     public function register($data)
     {
-        
-        $validator = Validator::make($data, [
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|string|email|max:255|unique:users',
-            'password'      => 'required|string|min:6',
-            'phone'         => 'required|string|unique:users',
-            //'picture_file'  => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role'          => 'required|string|in:Admin,Mentor,Learner',
-            'can_host'      => 'nullable|boolean',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        //\Log::info("Data received for registration:", $data);
-        
-        // if (isset($data['picture_file'])) {
-            
-        //     $uploadResult = app(\App\Services\UploadService::class)->uploadFile($data['picture_file']);
-        //     if ($uploadResult['success']) {
-                
-        //         $data['picture_file'] = $uploadResult['data']['url'];
-        //     } else {
-                
-        //         $data['picture_file'] = null;
-        //     }
-        // } else {
-        //     $data['picture_file'] = null;
-        // }
-        //\Log::info("Data received for registration:", $data);
-    
-        
+        // Create user directly since validation is handled in the controller
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
             'phone'    => $data['phone'],
-            'picture'  => $data['picture'],
+            'picture'  => $data['picture'] ?? null,
             'role'     => $data['role'],
             'can_host' => $data['can_host'] ?? false,
         ]);
@@ -90,18 +56,8 @@ class AuthService
         return response()->json(['message' => 'User registered successfully'], 201);
     }
     
-
     public function login($data)
     {
-        $validator = Validator::make($data, [
-            'email' => 'required|string|email',
-            'password' => 'required|string'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
         $user = User::where('email', $data['email'])->first();
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
@@ -119,10 +75,6 @@ class AuthService
 
     public function refreshToken($tokenString)
     {
-        if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
-        }
-
         try {
             $parser = new JwtParser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
@@ -151,10 +103,6 @@ class AuthService
 
     public function logout($tokenString)
     {
-        if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
-        }
-
         try {
             $parser = new JwtParser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
@@ -175,10 +123,6 @@ class AuthService
 
     public function getProfile($tokenString)
     {
-        if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
-        }
-
         try {
             $parser = new JwtParser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
@@ -216,10 +160,6 @@ class AuthService
 
     public function updateProfile($tokenString, $data)
     {
-        if (!$tokenString || !str_starts_with($tokenString, 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
-        }
-
         try {
             $parser = new JwtParser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
@@ -238,19 +178,7 @@ class AuthService
                 return response()->json(['error' => 'User not found'], 404);
             }
 
-            $validator = Validator::make($data, [
-                'name' => 'sometimes|required|string|max:255',
-                'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
-                'phone' => 'sometimes|required|string|unique:users,phone,' . $user->user_id . ',user_id',
-                'picture' => 'nullable|url',
-                'password' => 'nullable|string|min:6',
-                'role' => 'sometimes|required|string|in:Admin,Mentor,Learner',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
-            }
-
+            // Update user fields (validation already done in controller)
             if (isset($data['name']))
                 $user->name = $data['name'];
             if (isset($data['email']))
