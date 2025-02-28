@@ -34,6 +34,7 @@ class AuthService
             ->expiresAt($now->modify("+{$expiresIn} seconds"))
             ->withClaim('uid', $user->user_id)
             ->withClaim('phone', $user->phone)
+            ->withClaim('role', $user->role)
             ->withClaim('picture', $user->picture)
             ->withClaim('can_host', $user->can_host)
             ->getToken($algorithm, $signingKey)

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\CourseController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,5 +38,6 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/profile', [AuthController::class, 'getProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/profile/update', [AuthController::class, 'updateProfile']);
+    Route::post('/course/create', [CourseController::class, 'createCourse']);
 });
 Route::post('/upload', [UploadController::class, 'upload']);
