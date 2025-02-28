@@ -59,10 +59,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
+        // Retrieve the authenticated user from the request
+        $user = $request->attributes->get('user');
+    
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
         }
-
+    
+        // Call the authService to perform the logout
         return $this->authService->logout($request->header('Authorization'));
     }
 
@@ -82,30 +86,31 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
+        // Retrieve the authenticated user from the request
+        $user = $request->attributes->get('user');
+    
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
         }
-
-        $userId = $this->getUserIdFromToken($request->header('Authorization'));
-        if (!$userId) {
-            return response()->json(['error' => 'Invalid token'], 403);
-        }
-
+    
+        // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $userId . ',user_id',
-            'phone' => 'sometimes|required|string|unique:users,phone,' . $userId . ',user_id',
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
+            'phone' => 'sometimes|required|string|unique:users,phone,' . $user->user_id . ',user_id',
             'picture' => 'nullable|url',
             'password' => 'nullable|string|min:6',
             'role' => 'sometimes|required|string|in:Admin,Mentor,Learner',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        return $this->authService->updateProfile($request->header('Authorization'), $request->all());
+    
+        // Call the authService to update the profile
+        return $this->authService->updateProfile($user, $request->all());
     }
+    
 
     /**
      * Extract user ID from the token
