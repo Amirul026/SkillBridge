@@ -86,13 +86,20 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request)
     {
+        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
+            return response()->json(['error' => 'Token required'], 401);
+        }        
+        $userId = $this->getUserIdFromToken($request->header('Authorization'));
+        if (!$userId) {
+            return response()->json(['error' => 'Invalid token'], 403);
+        }
         // Retrieve the authenticated user from the request
         $user = $request->attributes->get('user');
     
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-    
+  
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
