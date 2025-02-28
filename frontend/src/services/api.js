@@ -1,58 +1,48 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { refreshToken } from './authService';
 
-// Create axios instance
+
+import axios from "axios";
+import { refreshToken, logout } from "./authService"; 
+import Cookies from "js-cookie";
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api', // Replace with your API base URL
+  baseURL: "http://localhost:8000/api",
+  withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
-// Request interceptor to attach auth token
+// Add a request interceptor to add the Authorization header
 api.interceptors.request.use(
   (config) => {
-    const token = Cookies.get('access_token');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    const accessToken = Cookies.get("access_token");
+    if (accessToken) {
+      config.headers.Authorization = Bearer ${accessToken};
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle token refresh
+// Add a response interceptor to handle token refresh
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    
-    // If error is 401 and we haven't tried to refresh the token yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
       try {
-        // Try to refresh the token
-        const refreshResponse = await refreshToken();
-        
-        // If token refresh successful, retry the original request
-        if (refreshResponse.access_token) {
-          return api(originalRequest);
-        }
+        await refreshToken(); // Refresh the token
+        return api(originalRequest); // Retry the original request
       } catch (refreshError) {
-        // If token refresh fails, redirect to login
-        window.location.href = '/login';
+        // Handle refresh token failure (e.g., redirect to login)
+        logout(); // Log out the user
         return Promise.reject(refreshError);
       }
     }
-    
     return Promise.reject(error);
   }
 );
 
-export default api;
+export default api
