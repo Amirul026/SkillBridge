@@ -40,5 +40,8 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::put('/profile/update', [AuthController::class, 'updateProfile']);
     Route::post('/courses/create', [CourseController::class, 'createCourse']);
     Route::put('/courses/{courseId}', [CourseController::class, 'updateCourse']);
+    Route::delete('/courses/{courseId}', [CourseController::class, 'deleteCourse']); 
+    Route::get('/courses', [CourseController::class, 'getCourses']); 
+    Route::get('/courses/{courseId}', [CourseController::class, 'getCourse']); 
 });
 Route::post('/upload', [UploadController::class, 'upload']);

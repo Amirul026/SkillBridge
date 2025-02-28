@@ -23,38 +23,43 @@ class CourseController extends Controller
         if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
             return response()->json(['error' => 'Token required'], 401);
         }
-    
+
         $role = $this->getUserRoleFromToken($request->header('Authorization'));
         if ($role !== 'Mentor') {
             return response()->json(['error' => 'Unauthorized: Only mentors can create courses'], 403);
         }
-    
+
         $user = $request->attributes->get('user');
         $mentorId = $user->user_id;
-    
+
         $validator = Validator::make($request->all(), [
             'is_paywalled' => 'required|boolean',
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
-            //'rating' => 'nullable|numeric|min:0|max:5',
+            'rating' => 'nullable|numeric|min:0|max:5',
             'picture' => 'nullable|url',
             'level' => 'required|string',
             'type' => 'required|string',
             'lesson_number' => 'required|integer|min:1',
             'length_in_weeks' => 'required|integer|min:1',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-    
+
         // Merge mentor_id into the request data
         $courseData = array_merge($request->all(), ['mentor_id' => $mentorId]);
-    
-        // Pass the merged data to the service
-        return $this->courseService->createCourse($courseData);
+
+        try {
+            $course = $this->courseService->createCourse($courseData);
+            return response()->json(['message' => 'Course created successfully', 'course' => $course], 201);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error creating course: ' . $e->getMessage()], 500);
+        }
     }
+
     /**
      * Update an existing course.
      */
@@ -63,15 +68,10 @@ class CourseController extends Controller
         if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
             return response()->json(['error' => 'Token required'], 401);
         }
-    
+
         $role = $this->getUserRoleFromToken($request->header('Authorization'));
         if ($role !== 'Mentor') {
-            return response()->json(['error' => 'Unauthorized: Only mentors can create courses'], 403);
-        }
-
-        $course = DB::table('courses')->where('course_id', $courseId)->first();
-        if (!$course) {
-            return response()->json(['error' => 'Course not found'], 404);
+            return response()->json(['error' => 'Unauthorized: Only mentors can update courses'], 403);
         }
 
         $validator = Validator::make($request->all(), [
@@ -90,9 +90,40 @@ class CourseController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        return $this->courseService->updateCourse($courseId, $request->all());
+        try {
+            $course = $this->courseService->updateCourse($courseId, $request->all());
+            return response()->json(['message' => 'Course updated successfully', 'course' => $course], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error updating course: ' . $e->getMessage()], 500);
+        }
     }
 
+    /**
+     * Delete a course.
+     */
+    public function deleteCourse(Request $request, $courseId)
+    {
+        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
+            return response()->json(['error' => 'Token required'], 401);
+        }
+
+        $role = $this->getUserRoleFromToken($request->header('Authorization'));
+        if ($role !== 'Mentor') {
+            return response()->json(['error' => 'Unauthorized: Only mentors can delete courses'], 403);
+        }
+        $mentorId = $this->getUserIdFromToken($request->header('Authorization'));
+        $course = DB::table('courses')->where('course_id', $courseId)->first();
+        if (!$course || $course->mentor_id !== $mentorId) {
+            return response()->json(['error' => 'Unauthorized: Only the creator can delete this course'], 403);
+        }
+
+        try {
+            $this->courseService->deleteCourse($courseId);
+            return response()->json(['message' => 'Course deleted successfully'], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error deleting course: ' . $e->getMessage()], 500);
+        }
+    }
 
     private function getUserRoleFromToken($tokenString)
     {
@@ -100,6 +131,17 @@ class CourseController extends Controller
             $parser = new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
             return $token->claims()->get('role');
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    private function getUserIdFromToken($tokenString)
+    {
+        try {
+            $parser = new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder());
+            $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
+            return $token->claims()->get('uid');
         } catch (\Exception $e) {
             return null;
         }
