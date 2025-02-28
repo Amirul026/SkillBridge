@@ -146,4 +146,29 @@ class CourseController extends Controller
             return null;
         }
     }
+        /**
+     * Get all courses
+     */
+    public function getCourses()
+    {
+        try {
+            $courses = $this->courseService->getCourses();
+            return response()->json(['courses' => $courses], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Get a single course by ID
+     */
+    public function getCourse($courseId)
+    {
+        try {
+            $course = $this->courseService->getCourseById($courseId);
+            return response()->json(['course' => $course], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
 }

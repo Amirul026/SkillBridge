@@ -66,4 +66,43 @@ class CourseService
         }
         return true;
     }
+    public function getCourses()
+    {
+        try {
+            // Fetch all courses using raw SQL
+            $courses = DB::table('courses')
+                ->join('users', 'courses.mentor_id', '=', 'users.user_id')
+                ->select('courses.*', 'users.name as mentor_name')
+                ->get();
+
+            return $courses;
+        } catch (\Exception $e) {
+            Log::error('Error fetching courses: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Get a single course by ID
+     */
+    public function getCourseById($courseId)
+    {
+        try {
+            // Fetch the course using raw SQL
+            $course = DB::table('courses')
+                ->join('users', 'courses.mentor_id', '=', 'users.user_id')
+                ->select('courses.*', 'users.name as mentor_name')
+                ->where('courses.course_id', $courseId)
+                ->first();
+
+            if (!$course) {
+                throw new \Exception('Course not found');
+            }
+
+            return $course;
+        } catch (\Exception $e) {
+            Log::error('Error fetching course: ' . $e->getMessage());
+            throw $e;
+        }
+    }
 }
