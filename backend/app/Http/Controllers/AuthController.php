@@ -68,12 +68,17 @@ class AuthController extends Controller
 
     public function getProfile(Request $request)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
+        // Retrieve the authenticated user from the request
+        $user = $request->attributes->get('user');
+    
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
         }
-
-        return $this->authService->getProfile($request->header('Authorization'));
+    
+        // Call the authService to get the profile data
+        return $this->authService->getProfile($user);
     }
+
 
     public function updateProfile(Request $request)
     {

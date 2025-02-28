@@ -121,43 +121,22 @@ class AuthService
         }
     }
 
-    public function getProfile($tokenString)
+    public function getProfile(User $user)
     {
-        try {
-            $parser = new JwtParser(new JoseEncoder());
-            $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
-
-            $signingKey = InMemory::plainText(config('app.jwt_secret'));
-            $validator = new JWTValidator();
-
-            if (!$validator->validate($token, new SignedWith(new Sha256(), $signingKey))) {
-                return response()->json(['error' => 'Invalid token'], 403);
-            }
-
-            $userId = $token->claims()->get('uid');
-            $user = User::find($userId);
-
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'profile' => [
-                    'user_id' => $user->user_id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'phone' => $user->phone,
-                    'picture' => $user->picture,
-                    'role' => $user->role,
-                    'can_host' => $user->can_host,
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Token parsing error: ' . $e->getMessage()], 401);
-        }
+        // Format and return the user profile data
+        return response()->json([
+            'success' => true,
+            'profile' => [
+                'user_id' => $user->user_id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'picture' => $user->picture,
+                'role' => $user->role,
+                'can_host' => $user->can_host,
+            ]
+        ]);
     }
-
     public function updateProfile($tokenString, $data)
     {
         try {
