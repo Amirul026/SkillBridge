@@ -14,7 +14,6 @@ export const register = async (userData) => {
   }
 };
 
-// Login User
 export const login = async (credentials) => {
   try {
     const response = await api.post("/login", credentials);
@@ -29,14 +28,16 @@ export const login = async (credentials) => {
       secure: true,
     });
 
-    toast.success("Login successful! Redirecting to Profile...");
+    // Store user role in localStorage
+    localStorage.setItem('userRole', response.data.role);
+
+    toast.success("Login successful");
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.error || "Login failed!");
     throw error;
   }
 };
-
 // Refresh Token
 export const refreshToken = async () => {
   try {
@@ -60,7 +61,8 @@ export const refreshToken = async () => {
   }
 };
 
-// Logout User
+// logout 
+
 export const logout = async () => {
   try {
     await api.post(
@@ -73,6 +75,7 @@ export const logout = async () => {
 
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
+    localStorage.removeItem('userRole');
 
     toast.success("Logged out successfully!");
   } catch (error) {
@@ -80,7 +83,6 @@ export const logout = async () => {
     throw error;
   }
 };
-
 // Get User Profile
 export const getProfile = async () => {
   try {
@@ -108,4 +110,8 @@ export const updateProfile = async (updatedData) => {
     toast.error("Failed to update profile!");
     throw error;
   }
+};
+// Check if user is authenticated
+export const isAuthenticated = () => {
+  return !!Cookies.get("access_token");
 };

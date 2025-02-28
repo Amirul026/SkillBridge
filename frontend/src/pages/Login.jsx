@@ -16,16 +16,16 @@ const Login = ({ isDarkMode }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       await login(formData);   
-      navigate("/profile");
+      navigate("/dashboard");
     } catch (error) {
       toast.error(error.response?.data?.error || "Login failed!");
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div className={`min-h-screen py-8 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>

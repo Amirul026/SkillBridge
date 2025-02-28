@@ -1,3 +1,5 @@
+
+
 import axios from "axios";
 import { refreshToken, logout } from "./authService"; 
 import Cookies from "js-cookie";
@@ -16,7 +18,7 @@ api.interceptors.request.use(
   (config) => {
     const accessToken = Cookies.get("access_token");
     if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers.Authorization = Bearer ${accessToken};
     }
     return config;
   },
@@ -43,4 +45,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export default api

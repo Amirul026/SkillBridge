@@ -80,12 +80,12 @@ const handleSubmit = async (e) => {
 
       // Now, make the registration request (only after the upload)
       await register({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone,
-          role: formData.role,
-          picture: pictureUrl, // Include the URL here
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        role: formData.role, // Ensure this is set correctly
+        picture: pictureUrl,
       });
 
       setTimeout(() => navigate("/login"), 2000);
