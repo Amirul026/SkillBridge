@@ -106,97 +106,69 @@ class AuthService
         try {
             $parser = new JwtParser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
-
+    
+            // Check if the token is already expired
             $expiration = $token->claims()->get('exp');
-            if (!$expiration || $expiration->getTimestamp() < time()) {
-                return response()->json(['error' => 'Token already expired'], 401);
+            if ($expiration instanceof \DateTimeImmutable && $expiration <= new \DateTimeImmutable()) {
+                return response()->json(['message' => 'Token already expired'], 401);
             }
-
+    
+            // Invalidate the token by adding it to the cache
             $tokenId = $token->claims()->get('jti');
             Cache::put('invalidated_token_' . $tokenId, true, now()->addMinutes(60));
-
+    
             return response()->json(['message' => 'Logged out successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Token parsing error: ' . $e->getMessage()], 401);
+            return response()->json(['error' => 'Logout error: ' . $e->getMessage()], 500);
         }
     }
+    
 
-    public function getProfile($tokenString)
+    public function getProfile(User $user)
     {
-        try {
-            $parser = new JwtParser(new JoseEncoder());
-            $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
-
-            $signingKey = InMemory::plainText(config('app.jwt_secret'));
-            $validator = new JWTValidator();
-
-            if (!$validator->validate($token, new SignedWith(new Sha256(), $signingKey))) {
-                return response()->json(['error' => 'Invalid token'], 403);
-            }
-
-            $userId = $token->claims()->get('uid');
-            $user = User::find($userId);
-
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'profile' => [
-                    'user_id' => $user->user_id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'phone' => $user->phone,
-                    'picture' => $user->picture,
-                    'role' => $user->role,
-                    'can_host' => $user->can_host,
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Token parsing error: ' . $e->getMessage()], 401);
-        }
+        // Format and return the user profile data
+        return response()->json([
+            'success' => true,
+            'profile' => [
+                'user_id' => $user->user_id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'picture' => $user->picture,
+                'role' => $user->role,
+                'can_host' => $user->can_host,
+            ]
+        ]);
     }
-
-    public function updateProfile($tokenString, $data)
+    public function updateProfile(User $user, array $data)
     {
         try {
-            $parser = new JwtParser(new JoseEncoder());
-            $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
-
-            $signingKey = InMemory::plainText(config('app.jwt_secret'));
-            $validator = new JWTValidator();
-
-            if (!$validator->validate($token, new SignedWith(new Sha256(), $signingKey))) {
-                return response()->json(['error' => 'Invalid token'], 403);
-            }
-
-            $userId = $token->claims()->get('uid');
-            $user = User::find($userId);
-
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-
             // Update user fields (validation already done in controller)
-            if (isset($data['name']))
+            if (isset($data['name'])) {
                 $user->name = $data['name'];
-            if (isset($data['email']))
+            }
+            if (isset($data['email'])) {
                 $user->email = $data['email'];
-            if (isset($data['phone']))
+            }
+            if (isset($data['phone'])) {
                 $user->phone = $data['phone'];
-            if (isset($data['picture']))
+            }
+            if (isset($data['picture'])) {
                 $user->picture = $data['picture'];
-            if (isset($data['password']))
+            }
+            if (isset($data['password'])) {
                 $user->password = Hash::make($data['password']);
-            if (isset($data['role']))
+            }
+            if (isset($data['role'])) {
                 $user->role = $data['role'];
-
+            }
+    
             $user->save();
-
+    
             return response()->json(['message' => 'Profile updated successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+    
 }
