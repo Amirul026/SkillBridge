@@ -6,6 +6,11 @@ import { toast } from "react-toastify";
 export const register = async (userData) => {
   try {
     const response = await api.post("/register", userData);
+
+    // Store user role in localStorage
+    localStorage.setItem('userRole', userData.role); // Ensure this is set correctly
+    console.log("User Role after Registration:", userData.role); // Debugging
+
     toast.success("Registration successful! Redirecting to login...");
     return response.data;
   } catch (error) {
@@ -14,6 +19,7 @@ export const register = async (userData) => {
   }
 };
 
+// Login User
 export const login = async (credentials) => {
   try {
     const response = await api.post("/login", credentials);
@@ -28,8 +34,13 @@ export const login = async (credentials) => {
       secure: true,
     });
 
+    // Fetch user profile to get the role
+    const profileResponse = await getProfile();
+    const userRole = profileResponse.role;
+
     // Store user role in localStorage
-    localStorage.setItem('userRole', response.data.role);
+    localStorage.setItem('userRole', userRole); // Ensure this is set correctly
+    console.log("User Role after Login:", userRole); // Debugging
 
     toast.success("Login successful");
     return response.data;
@@ -38,6 +49,7 @@ export const login = async (credentials) => {
     throw error;
   }
 };
+
 // Refresh Token
 export const refreshToken = async () => {
   try {
@@ -61,8 +73,7 @@ export const refreshToken = async () => {
   }
 };
 
-// logout 
-
+// Logout User
 export const logout = async () => {
   try {
     await api.post(
@@ -75,7 +86,7 @@ export const logout = async () => {
 
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
-    localStorage.removeItem('userRole');
+    localStorage.removeItem('userRole'); // Clear user role on logout
 
     toast.success("Logged out successfully!");
   } catch (error) {
@@ -83,6 +94,7 @@ export const logout = async () => {
     throw error;
   }
 };
+
 // Get User Profile
 export const getProfile = async () => {
   try {
@@ -111,6 +123,7 @@ export const updateProfile = async (updatedData) => {
     throw error;
   }
 };
+
 // Check if user is authenticated
 export const isAuthenticated = () => {
   return !!Cookies.get("access_token");
