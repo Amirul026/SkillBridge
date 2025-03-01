@@ -74,6 +74,12 @@ class CourseController extends Controller
             return response()->json(['error' => 'Unauthorized: Only mentors can update courses'], 403);
         }
 
+        $mentorId = $this->getUserIdFromToken($request->header('Authorization'));
+        $course = DB::table('courses')->where('course_id', $courseId)->first();
+        if (!$course || $course->mentor_id !== $mentorId) {
+            return response()->json(['error' => 'Unauthorized: Only the creator can delete this course'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'is_paywalled' => 'boolean',
             'title' => 'string|max:255',
