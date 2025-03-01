@@ -9,7 +9,10 @@ import Profile from "./pages/Profile";
 import MentorDashboard from "./pages/MentorDashboard";
 import LearnerDashboard from "./pages/LearnerDashboard";
 import CreateCourse from "./pages/CreateCourse";
-import MentorCoursesPage from "./pages/MentorCoursesPage"; // Import the MentorCoursesPage
+import MentorCoursesPage from "./pages/MentorCoursesPage";
+import ChatPage from "./pages/ChatPage"; // Import the ChatPage
+import LeaderboardPage from "./pages/LeaderboardPage"; // Import the LeaderboardPage
+import IndividualCoursePage from "./pages/IndividualCoursePage"; // Import the IndividualCoursePage
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import styles
 import { isAuthenticated } from './services/authService';
@@ -90,6 +93,36 @@ const App = () => {
                 element={
                   isAuthenticated() && localStorage.getItem('userRole') === 'Mentor' ? (
                     <MentorCoursesPage isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/chat"
+                element={
+                  isAuthenticated() ? (
+                    <ChatPage isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/leaderboard"
+                element={
+                  isAuthenticated() ? (
+                    <LeaderboardPage isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/learning/:courseId"
+                element={
+                  isAuthenticated() ? (
+                    <IndividualCoursePage isDarkMode={isDarkMode} />
                   ) : (
                     <Navigate to="/login" />
                   )
