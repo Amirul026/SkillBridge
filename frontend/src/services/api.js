@@ -1,5 +1,3 @@
-
-
 import axios from "axios";
 import { refreshToken, logout } from "./authService"; 
 import Cookies from "js-cookie";
@@ -18,7 +16,7 @@ api.interceptors.request.use(
   (config) => {
     const accessToken = Cookies.get("access_token");
     if (accessToken) {
-      config.headers.Authorization = Bearer ${accessToken};
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -30,14 +28,15 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+
+    // Ensure error.response exists before accessing its properties
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         await refreshToken(); // Refresh the token
         return api(originalRequest); // Retry the original request
       } catch (refreshError) {
-        // Handle refresh token failure (e.g., redirect to login)
-        logout(); // Log out the user
+        logout(); // Log out the user on refresh failure
         return Promise.reject(refreshError);
       }
     }
@@ -45,4 +44,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api
+export default api;
