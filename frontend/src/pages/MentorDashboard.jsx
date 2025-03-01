@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProfile } from '../services/authService';
-import { User, MessageCircle, Award, PlusCircle } from 'lucide-react';
+import { User, MessageCircle, Award, PlusCircle, BookOpen } from 'lucide-react';
 
 const MentorDashboard = ({ isDarkMode }) => {
   const [user, setUser] = useState(null);
@@ -25,6 +25,7 @@ const MentorDashboard = ({ isDarkMode }) => {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Hello, {user?.name}!</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* My Profile Section */}
           <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center space-x-4">
               <User className="w-8 h-8" />
@@ -38,6 +39,8 @@ const MentorDashboard = ({ isDarkMode }) => {
               Go to Profile
             </button>
           </div>
+
+          {/* Chat Section */}
           <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center space-x-4">
               <MessageCircle className="w-8 h-8" />
@@ -45,6 +48,8 @@ const MentorDashboard = ({ isDarkMode }) => {
             </div>
             <p className="mt-4">Connect with learners and other mentors.</p>
           </div>
+
+          {/* Leaderboard Section */}
           <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center space-x-4">
               <Award className="w-8 h-8" />
@@ -52,6 +57,7 @@ const MentorDashboard = ({ isDarkMode }) => {
             </div>
             <p className="mt-4">Track your progress and achievements.</p>
           </div>
+
           {/* Create Course Section */}
           <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center space-x-4">
@@ -64,6 +70,21 @@ const MentorDashboard = ({ isDarkMode }) => {
               className="mt-4 px-4 py-2 bg-[#1e1a53] text-white rounded-md hover:bg-[#1e1a53]/90 transition-colors"
             >
               Create Course
+            </button>
+          </div>
+
+          {/* View My Courses Section */}
+          <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className="flex items-center space-x-4">
+              <BookOpen className="w-8 h-8" />
+              <h2 className="text-xl font-bold">My Courses</h2>
+            </div>
+            <p className="mt-4">View all the courses you have created.</p>
+            <button
+              onClick={() => navigate('/mentor-courses')}
+              className="mt-4 px-4 py-2 bg-[#1e1a53] text-white rounded-md hover:bg-[#1e1a53]/90 transition-colors"
+            >
+              View My Courses
             </button>
           </div>
         </div>
