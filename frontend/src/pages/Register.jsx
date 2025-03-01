@@ -1,9 +1,8 @@
-import { useState,useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Upload, Rocket, BookOpen, Users, Award } from 'lucide-react';
 import { register } from '../services/authService';
 import { toast } from 'react-toastify';
-
 
 const Register = ({ isDarkMode }) => {
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -13,14 +12,12 @@ const Register = ({ isDarkMode }) => {
     password: '',
     confirmPassword: '',
     phone: '',
-    role: 'Learner'
+    role: 'Learner',
   });
   const passwordRef = useRef(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState(null);
-
-  
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -30,55 +27,54 @@ const Register = ({ isDarkMode }) => {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-        setPhotoPreview(reader.result);
-    }
+      setPhotoPreview(reader.result);
+    };
     if (file) {
-        reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
     }
-};
-  
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match!");
       setFormData((prevData) => ({
-          ...prevData,
-          password: "",
-          confirmPassword: "",
+        ...prevData,
+        password: "",
+        confirmPassword: "",
       }));
       passwordRef.current.focus();
       setLoading(false);
       return;
-  }
+    }
 
-  try {
+    try {
       let pictureUrl = null;
 
-      // *** Make the upload request ONLY ONCE ***
+      // Upload profile picture if provided
       if (formData.picture_file) {
-          const fileUploadFormData = new FormData();
-          fileUploadFormData.append('picture_file', formData.picture_file);
+        const fileUploadFormData = new FormData();
+        fileUploadFormData.append('picture_file', formData.picture_file);
 
-          const uploadResponse = await fetch('http://127.0.0.1:8000/api/upload', {
-              method: 'POST',
-              body: fileUploadFormData,
-          });
+        const uploadResponse = await fetch('http://127.0.0.1:8000/api/upload', {
+          method: 'POST',
+          body: fileUploadFormData,
+        });
 
-          if (!uploadResponse.ok) {
-              const errorData = await uploadResponse.json();
-              console.error("Upload Error:", errorData);
-              throw new Error(errorData.message || "Image upload failed!");
-          }
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json();
+          console.error("Upload Error:", errorData);
+          throw new Error(errorData.message || "Image upload failed!");
+        }
 
-          const uploadData = await uploadResponse.json();
-          pictureUrl = uploadData.data.url;
-          console.log("Picture URL:", pictureUrl);  // Log the URL
+        const uploadData = await uploadResponse.json();
+        pictureUrl = uploadData.data.url;
+        console.log("Picture URL:", pictureUrl); // Debugging
       }
 
-      // Now, make the registration request (only after the upload)
+      // Register the user
       await register({
         name: formData.name,
         email: formData.email,
@@ -88,15 +84,15 @@ const handleSubmit = async (e) => {
         picture: pictureUrl,
       });
 
+      toast.success("Registration successful! Redirecting to login...");
       setTimeout(() => navigate("/login"), 2000);
-
-  } catch (error) {
+    } catch (error) {
       console.error("Registration Error:", error);
-      toast.error(error.response?.data?.error || error.message || "Registration failed!"); // Improved error message
-  } finally {
+      toast.error(error.response?.data?.error || error.message || "Registration failed!");
+    } finally {
       setLoading(false);
-  }
-};
+    }
+  };
 
   return (
     <div className={`min-h-screen py-8 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
@@ -108,7 +104,7 @@ const handleSubmit = async (e) => {
               <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Join SkillBridge
               </h2>
-              
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Photo Upload */}
                 <div className="flex items-center space-x-4">
@@ -148,13 +144,9 @@ const handleSubmit = async (e) => {
                       type="text"
                       id="name"
                       required
-                      className={`mt-1 block w-full rounded-md shadow-sm ${
-                        isDarkMode 
-                          ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : 'bg-gray-200 border-gray-300 focus:border-blue-500'
-                      } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                      className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     />
                   </div>
 
@@ -167,13 +159,9 @@ const handleSubmit = async (e) => {
                       type="email"
                       id="email"
                       required
-                      className={`mt-1 block w-full rounded-md shadow-sm ${
-                        isDarkMode 
-                          ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : 'bg-gray-200 border-gray-300 focus:border-blue-500'
-                      } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                      className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
                   </div>
                 </div>
@@ -189,13 +177,9 @@ const handleSubmit = async (e) => {
                       id="password"
                       required
                       ref={passwordRef}
-                      className={`mt-1 block w-full rounded-md shadow-sm ${
-                        isDarkMode 
-                          ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : ' bg-gray-200 border-gray-300 focus:border-blue-500'
-                      } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                      className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.password}
-                      onChange={(e) => setFormData({...formData, password: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     />
                   </div>
 
@@ -208,13 +192,9 @@ const handleSubmit = async (e) => {
                       type="password"
                       id="confirmPassword"
                       required
-                      className={`mt-1 block w-full rounded-md shadow-sm ${
-                        isDarkMode 
-                          ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                          : 'bg-gray-200 border-gray-300 focus:border-blue-500'
-                      } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                      className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                       value={formData.confirmPassword}
-                      onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     />
                   </div>
                 </div>
@@ -228,13 +208,9 @@ const handleSubmit = async (e) => {
                     type="tel"
                     id="phone"
                     required
-                    className={`mt-1 block w-full rounded-md shadow-sm ${
-                      isDarkMode 
-                        ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                        : 'bg-gray-200 border-gray-300 focus:border-blue-500'
-                    } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                    className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
                     value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   />
                 </div>
 
@@ -251,7 +227,7 @@ const handleSubmit = async (e) => {
                           name="role"
                           value={role}
                           checked={formData.role === role}
-                          onChange={(e) => setFormData({...formData, role: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                           className="form-radio text-blue-600"
                         />
                         <span className={`ml-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
@@ -276,7 +252,7 @@ const handleSubmit = async (e) => {
               <p className={`mt-4 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Already have an account?{' '}
                 <Link to="/login" className={`font-medium ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}>
-                  Login 
+                  Login
                 </Link>
               </p>
             </div>
@@ -286,7 +262,7 @@ const handleSubmit = async (e) => {
               <Rocket size={64} className="mb-6 animate-bounce" />
               <h3 className="text-2xl font-bold mb-4">Start Your Learning Journey</h3>
               <p className="text-center mb-8">Join thousands of learners and mentors in our community</p>
-              
+
               <div className="space-y-6 w-full max-w-md">
                 <div className="flex items-center space-x-4">
                   <BookOpen className="flex-shrink-0" />
@@ -295,7 +271,7 @@ const handleSubmit = async (e) => {
                     <p className="text-sm text-blue-100">Learn from industry experts and professionals</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-4">
                   <Users className="flex-shrink-0" />
                   <div>
@@ -303,7 +279,7 @@ const handleSubmit = async (e) => {
                     <p className="text-sm text-blue-100">Connect with peers and mentors worldwide</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-4">
                   <Award className="flex-shrink-0" />
                   <div>

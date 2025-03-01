@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LogIn, Lock, Mail, BookOpen, Users, Trophy } from "lucide-react";
-import { login } from "../services/authService"; // Import login function
+import { login } from "../services/authService";
 import { toast } from "react-toastify";
 
 const Login = ({ isDarkMode }) => {
@@ -11,21 +11,21 @@ const Login = ({ isDarkMode }) => {
   });
 
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
-      await login(formData);   
-      navigate("/dashboard");
+      await login(formData);
+      navigate("/dashboard"); // Redirect to dashboard after login
     } catch (error) {
       toast.error(error.response?.data?.error || "Login failed!");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className={`min-h-screen py-8 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>

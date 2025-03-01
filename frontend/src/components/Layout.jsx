@@ -63,7 +63,7 @@ const Layout = ({ children }) => {
       await logout();
       setUser(null);
       navigate('/login');
-      toast.success('Logged out successfully');
+      
     } catch (error) {
       toast.error('Logout failed');
     }

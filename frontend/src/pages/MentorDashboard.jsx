@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProfile } from '../services/authService';
-import { User, MessageCircle, Award } from 'lucide-react';
+import { User, MessageCircle, Award, PlusCircle } from 'lucide-react';
 
 const MentorDashboard = ({ isDarkMode }) => {
   const [user, setUser] = useState(null);
@@ -51,6 +51,20 @@ const MentorDashboard = ({ isDarkMode }) => {
               <h2 className="text-xl font-bold">Leaderboard</h2>
             </div>
             <p className="mt-4">Track your progress and achievements.</p>
+          </div>
+          {/* Create Course Section */}
+          <div className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className="flex items-center space-x-4">
+              <PlusCircle className="w-8 h-8" />
+              <h2 className="text-xl font-bold">Create Course</h2>
+            </div>
+            <p className="mt-4">Design and publish a new course for learners.</p>
+            <button
+              onClick={() => navigate('/create-course')}
+              className="mt-4 px-4 py-2 bg-[#1e1a53] text-white rounded-md hover:bg-[#1e1a53]/90 transition-colors"
+            >
+              Create Course
+            </button>
           </div>
         </div>
       </div>
