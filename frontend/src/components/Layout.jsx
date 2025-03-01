@@ -83,10 +83,10 @@ const Layout = ({ children }) => {
             className="w-full h-full object-cover"
           />
         </div>
-        <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <span className={`font-medium ${isDarkMode ? 'text-black' : 'text-gray-900'}`}>
           {user?.name}
         </span>
-        <ChevronDown className={`w-4 h-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} />
+        <ChevronDown className={`w-4 h-4 ${isDarkMode ? 'text-black' : 'text-gray-900'}`} />
       </button>
 
       {isProfileOpen && (

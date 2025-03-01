@@ -148,7 +148,7 @@ const LearnerDashboard = ({ isDarkMode }) => {
                   
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-4">
                     <div 
-                      className="bg-blue-600 h-2.5 rounded-full" 
+                      className="bg-[#1e1a53] h-2.5 rounded-full" 
                       style={{ width: `${course.progress}%` }}
                     ></div>
                   </div>
@@ -156,7 +156,7 @@ const LearnerDashboard = ({ isDarkMode }) => {
                   <div className="flex justify-between items-center text-sm">
                     <button
                       onClick={() => navigate(`/learning/${course.id}`)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                      className="px-3 py-1 bg-[#1e1a53] text-white rounded hover:bg-blue-700 transition-colors"
                     >
                       Continue
                     </button>
