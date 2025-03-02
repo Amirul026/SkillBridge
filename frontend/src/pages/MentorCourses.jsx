@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getCourses } from '../services/courseService';
 
 const MentorCourses = ({ isDarkMode }) => {
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -15,7 +15,7 @@ const MentorCourses = ({ isDarkMode }) => {
     };
 
     fetchCourses();
-  }, []);
+  },);
 
   return (
     <div className={`min-h-screen py-8 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
@@ -26,6 +26,13 @@ const MentorCourses = ({ isDarkMode }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {courses.map((course) => (
             <div key={course.id} className={`p-6 rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              {course.picture && (
+                <img
+                  src={course.picture}
+                  alt={course.title}
+                  className="w-full h-40 object-cover mb-4"
+                />
+              )}
               <h2 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {course.title}
               </h2>
