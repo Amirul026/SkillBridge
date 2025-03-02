@@ -4,18 +4,18 @@ import { toast } from "react-toastify";
 
 // Create a new course
 export const createCourse = async (courseData) => {
-    try {
-      const response = await api.post("/courses/create", courseData, {
-        headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
-      });
-  
-      toast.success("Course created successfully!");
-      return response.data;
-    } catch (error) {
-      toast.error(error.response?.data?.error || "Failed to create course!");
-      throw error;
-    }
-  };
+  try {
+    const response = await api.post("/courses/create", courseData, {
+      headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
+    });
+
+    toast.success("Course created successfully!");
+    return response.data;
+  } catch (error) {
+    toast.error(error.response?.data?.error || "Failed to create course!");
+    throw error;
+  }
+};
 
 // Update an existing course
 export const updateCourse = async (courseId, courseData) => {
@@ -53,7 +53,6 @@ export const getCourses = async () => {
     const response = await api.get("/courses", {
       headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
     });
-
     return response.data.courses;
   } catch (error) {
     toast.error(error.response?.data?.error || "Failed to fetch courses!");

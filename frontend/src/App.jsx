@@ -31,7 +31,9 @@ const App = () => {
               <Route path="/register" element={<Register isDarkMode={isDarkMode} />} />
               <Route path="/login" element={<Login isDarkMode={isDarkMode} />} />
               <Route path="/forgot-password" element={<ForgotPassword isDarkMode={isDarkMode} />} />
+              
               <Route path="/courses" element={<CoursesPage isDarkMode={isDarkMode} />} />
+              
               <Route path="/seminar" element={<div>Seminar Page</div>} />
               <Route path="/help" element={<div>Help Center</div>} />
               <Route path="/terms" element={<div>Terms of Service</div>} />
