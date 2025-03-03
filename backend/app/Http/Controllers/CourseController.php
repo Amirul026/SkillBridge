@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Services\CourseService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
@@ -155,26 +156,50 @@ class CourseController extends Controller
     /**
      * Get all courses
      */
-    public function getCourses()
+    // public function getCourses()
+    // {
+    //     try {
+    //         $courses = $this->courseService->getCourses();
+    //         return response()->json(['courses' => $courses], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+    //     }
+    // }
+
+        /**
+     * Get all courses.
+     */
+    public function index()
     {
-        try {
-            $courses = $this->courseService->getCourses();
-            return response()->json(['courses' => $courses], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
-        }
+        $courses = $this->courseService->getCourses();
+        return response()->json($courses);
     }
 
     /**
      * Get a single course by ID
      */
-    public function getCourse($courseId)
+    // public function getCourse($courseId)
+    // {
+    //     try {
+    //         $course = $this->courseService->getCourseById($courseId);
+    //         return response()->json(['course' => $course], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+    //     }
+    // }
+
+    public function getCoursesByMentor(Request $request)
     {
-        try {
-            $course = $this->courseService->getCourseById($courseId);
-            return response()->json(['course' => $course], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+        $user = $request->attributes->get('user');
+    
+        Log::info('CourseController: User object: ' . json_encode($user));
+    
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
         }
+    
+        $mentorId = $user->user_id;
+        $courses = $this->courseService->getCoursesByMentorId($mentorId);
+        return response()->json($courses);
     }
 }

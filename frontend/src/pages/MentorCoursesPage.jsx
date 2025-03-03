@@ -11,8 +11,8 @@ const MentorCoursesPage = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const data = await getCourses();
-        setCourses(data);
+        const data = await getCourses(true); // Fetch mentor courses
+        setCourses(data); //assuming the backend now returns an array of courses.
       } catch (error) {
         toast.error("Failed to fetch courses!");
       } finally {
@@ -22,6 +22,7 @@ const MentorCoursesPage = ({ isDarkMode }) => {
 
     fetchCourses();
   }, []);
+
 
   const handleDeleteCourse = async (courseId) => {
     try {

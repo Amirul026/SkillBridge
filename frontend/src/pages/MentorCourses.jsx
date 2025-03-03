@@ -7,7 +7,7 @@ const MentorCourses = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const coursesData = await getCourses();
+        const coursesData = await getCourses(true); // Fetch mentor courses
         setCourses(coursesData);
       } catch (error) {
         console.error("Failed to fetch courses:", error);
@@ -15,7 +15,7 @@ const MentorCourses = ({ isDarkMode }) => {
     };
 
     fetchCourses();
-  },);
+  }, []);
 
   return (
     <div className={`min-h-screen py-8 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>

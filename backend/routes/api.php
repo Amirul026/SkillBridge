@@ -45,8 +45,11 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::post('/courses/create', [CourseController::class, 'createCourse']);
     Route::put('/courses/{courseId}', [CourseController::class, 'updateCourse']);
     Route::delete('/courses/{courseId}', [CourseController::class, 'deleteCourse']);
-    Route::get('/courses', [CourseController::class, 'getCourses']);
-    Route::get('/courses/{courseId}', [CourseController::class, 'getCourse']);
+    // Route::get('/courses', [CourseController::class, 'getCourses']);
+    // Route::get('/courses/{courseId}', [CourseController::class, 'getCourse']);
+
+    Route::get('/courses', [CourseController::class, 'index']); // All courses
+    Route::get('/mentor/courses', [CourseController::class, 'getCoursesByMentor']); // Courses by mentor
 
     // Lesson routes
     Route::post('/lessons', [LessonController::class, 'createLesson']);
