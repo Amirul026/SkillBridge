@@ -23,15 +23,15 @@ class CourseController extends Controller
         if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
             return response()->json(['error' => 'Token required'], 401);
         }
-    
+
         $role = $this->getUserRoleFromToken($request->header('Authorization'));
         if ($role !== 'Mentor') {
             return response()->json(['error' => 'Unauthorized: Only mentors can create courses'], 403);
         }
-    
+
         $user = $request->attributes->get('user');
         $mentorId = $user->user_id;
-    
+
         $validator = Validator::make($request->all(), [
             'is_paywalled' => 'required|boolean',
             'title' => 'required|string|max:255',
@@ -44,18 +44,18 @@ class CourseController extends Controller
             'lesson_number' => 'required|integer|min:1',
             'length_in_weeks' => 'required|integer|min:1',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-    
+
         // Merge mentor_id into the request data
         $courseData = array_merge($request->all(), ['mentor_id' => $mentorId]);
-    
+
         try {
             $course = $this->courseService->createCourse($courseData);
             return response()->json(['message' => 'Course created successfully', 'course' => $course], 201);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Error creating course: ' . $e->getMessage()], 500);
         }
     }
@@ -99,7 +99,7 @@ class CourseController extends Controller
         try {
             $course = $this->courseService->updateCourse($courseId, $request->all());
             return response()->json(['message' => 'Course updated successfully', 'course' => $course], 200);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Error updating course: ' . $e->getMessage()], 500);
         }
     }
@@ -126,7 +126,7 @@ class CourseController extends Controller
         try {
             $this->courseService->deleteCourse($courseId);
             return response()->json(['message' => 'Course deleted successfully'], 200);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Error deleting course: ' . $e->getMessage()], 500);
         }
     }
@@ -152,7 +152,7 @@ class CourseController extends Controller
             return null;
         }
     }
-        /**
+    /**
      * Get all courses
      */
     public function getCourses()

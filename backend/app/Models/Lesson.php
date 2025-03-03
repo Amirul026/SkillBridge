@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,34 +8,36 @@ class Lesson extends Model
 {
     use HasFactory;
 
-    protected $table = 'lessons';
-    protected $primaryKey = 'lesson_id';
-
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'course_id',
         'title',
+        'description',
         'content',
         'video_url',
-        'picture',
+        'duration',
         'order',
-        'duration_minutes',
+        'is_published',
     ];
 
-    public $timestamps = true; // Automatically manage created_at and updated_at
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
 
     /**
-     * Relationship: Belongs to a Course
+     * Get the course that owns the lesson.
      */
     public function course()
     {
-        return $this->belongsTo(Course::class, 'course_id', 'course_id');
-    }
-
-    /**
-     * Scope: Order Lessons
-     */
-    public function scopeOrdered($query)
-    {
-        return $query->orderBy('order');
+        return $this->belongsTo(Course::class);
     }
 }

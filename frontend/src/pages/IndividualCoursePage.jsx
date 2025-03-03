@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { BookOpen, ArrowLeft, Clock, CheckCircle, Video, FileText, LockClosed, PlayCircle, Award, ChevronRight } from 'lucide-react';
+import { BookOpen, ArrowLeft, Clock, CheckCircle, Video, FileText, Lock, PlayCircle, Award, ChevronRight } from 'lucide-react'; // Replaced LockClosed with Lock
 
 const IndividualCoursePage = ({ isDarkMode }) => {
   const { courseId } = useParams();

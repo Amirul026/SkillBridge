@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\LessonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,8 @@ use App\Http\Controllers\CourseController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-// Route::get('/test', [TestController::class, 'getTestHuman']);
+
+// Public routes
 Route::get('/test/{id}', [TestController::class, 'getTestHumanWithId']);
 Route::get('/test', function () {
     return response()->json(['message' => 'Backend connected successfully!']);
@@ -28,20 +30,27 @@ Route::get('/users', function () {
     return response()->json(User::all());
 });
 
-
-
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
 
+// Protected routes (require JWT authentication)
 Route::middleware(['auth.jwt'])->group(function () {
+    // User profile routes
     Route::get('/profile', [AuthController::class, 'getProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/profile/update', [AuthController::class, 'updateProfile']);
+
+    // Course routes
     Route::post('/courses/create', [CourseController::class, 'createCourse']);
     Route::put('/courses/{courseId}', [CourseController::class, 'updateCourse']);
-    Route::delete('/courses/{courseId}', [CourseController::class, 'deleteCourse']); 
-    Route::get('/courses', [CourseController::class, 'getCourses']); 
-    Route::get('/courses/{courseId}', [CourseController::class, 'getCourse']); 
+    Route::delete('/courses/{courseId}', [CourseController::class, 'deleteCourse']);
+    Route::get('/courses', [CourseController::class, 'getCourses']);
+    Route::get('/courses/{courseId}', [CourseController::class, 'getCourse']);
+
+    // Lesson routes
+    Route::post('/lessons', [LessonController::class, 'createLesson']);
 });
+
+// Upload route
 Route::post('/upload', [UploadController::class, 'upload']);

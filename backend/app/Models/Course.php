@@ -19,11 +19,11 @@ class Course extends Model
         'price',
         'description',
         'rating',
-        'picture',          
-        'level',            
-        'type',             
-        'lesson_number',    
-        'length_in_weeks',  
+        'picture',
+        'level',
+        'type',
+        'lesson_number',
+        'length_in_weeks',
     ];
 
     public $timestamps = true; // Ensure created_at and updated_at are managed automatically
@@ -34,7 +34,7 @@ class Course extends Model
     public function mentor()
     {
         return $this->belongsTo(User::class, 'mentor_id', 'user_id')
-                    ->where('role', 'Mentor');
+            ->where('role', 'Mentor');
     }
 
     /**
