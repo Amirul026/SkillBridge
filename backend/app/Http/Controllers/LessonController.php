@@ -105,6 +105,23 @@ class LessonController extends Controller
     }
 
     /**
+     * Get all lessons under a specific course.
+     */
+    public function getLessonsByCourse(Request $request, $courseId)
+    {
+        if (!$this->isMentor($request)) {
+            return response()->json(['error' => 'Unauthorized: Only mentors can view lessons'], 403);
+        }
+
+        try {
+            $lessons = $this->lessonService->getLessonsByCourse($courseId);
+            return response()->json(['lessons' => $lessons], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error fetching lessons: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Get a single lesson by ID.
      */
     public function getLessonById(Request $request, $lessonId)
@@ -121,6 +138,31 @@ class LessonController extends Controller
         }
     }
 
+    /**
+     * Delete a lesson.
+     */
+    public function deleteLesson(Request $request, $lessonId)
+    {
+        if (!$this->isMentor($request)) {
+            return response()->json(['error' => 'Unauthorized: Only mentors can delete lessons'], 403);
+        }
+
+        try {
+            // Fetch the lesson with course data
+            $lesson = $this->lessonService->getLessonById($lessonId);
+
+            // Check if the logged-in user is the course creator
+            if ($lesson->mentor_id !== $this->getUserIdFromToken($request->header('Authorization'))) {
+                return response()->json(['error' => 'Unauthorized: Only the course creator can delete lessons'], 403);
+            }
+
+            // Delete the lesson
+            $this->lessonService->deleteLesson($lessonId);
+            return response()->json(['message' => 'Lesson deleted successfully'], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error deleting lesson: ' . $e->getMessage()], 500);
+        }
+    }
 
     private function isMentor(Request $request)
     {

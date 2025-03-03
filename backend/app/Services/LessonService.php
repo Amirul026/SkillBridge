@@ -59,4 +59,59 @@ class LessonService
         }
     }
 
+
+    /**
+     * Get all lessons under a specific course using raw SQL.
+     */
+    public function getLessonsByCourse(int $courseId)
+    {
+        try {
+            return DB::table('lessons')
+                ->where('course_id', $courseId)
+                ->orderBy('order', 'asc')
+                ->get();
+        } catch (Exception $e) {
+            throw new Exception('Error fetching lessons: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get a single lesson by ID using raw SQL.
+     */
+    public function getLessonById(int $lessonId)
+    {
+        try {
+            $lesson = DB::table('lessons')
+                ->join('courses', 'lessons.course_id', '=', 'courses.course_id')
+                ->select('lessons.*', 'courses.mentor_id') // Ensure mentor_id is selected
+                ->where('lessons.lesson_id', $lessonId)
+                ->first();
+
+            if (!$lesson) {
+                throw new Exception('Lesson not found');
+            }
+
+            return $lesson;
+        } catch (Exception $e) {
+            throw new Exception('Error fetching lesson: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete a lesson using raw SQL.
+     */
+    public function deleteLesson(int $lessonId)
+    {
+        try {
+            $affected = DB::table('lessons')->where('lesson_id', $lessonId)->delete();
+
+            if ($affected === 0) {
+                throw new Exception('Lesson not found');
+            }
+
+            return true;
+        } catch (Exception $e) {
+            throw new Exception('Error deleting lesson: ' . $e->getMessage());
+        }
+    }
 }

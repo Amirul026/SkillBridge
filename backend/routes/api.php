@@ -51,6 +51,9 @@ Route::middleware(['auth.jwt'])->group(function () {
     // Lesson routes
     Route::post('/lessons', [LessonController::class, 'createLesson']);
     Route::put('/lessons/{lessonId}', [LessonController::class, 'updateLesson']);
+    Route::delete('/lessons/{lessonId}', [LessonController::class, 'deleteLesson']);
+    Route::get('/lessons/course/{courseId}', [LessonController::class, 'getLessonsByCourse']);
+    Route::get('/lessons/{lessonId}', [LessonController::class, 'getLessonById']);
 });
 
 // Upload route
