@@ -1,6 +1,7 @@
 import api from "./api";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import axios from 'axios';
 
 // Create a new course
 export const createCourse = async (courseData) => {
