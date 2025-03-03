@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Lcobucci\JWT\Token\Builder;
 use Lcobucci\JWT\Encoding\JoseEncoder;
@@ -14,7 +15,6 @@ use Lcobucci\JWT\Validation\Validator as JWTValidator;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class AuthService
 {
@@ -43,23 +43,34 @@ class AuthService
 
     public function register($data)
     {
-        // Create user directly since validation is handled in the controller
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'phone' => $data['phone'],
-            'picture' => $data['picture'] ?? null,
-            'role' => $data['role'],
-            'can_host' => $data['can_host'] ?? false,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+            DB::insert(
+                'INSERT INTO users (name, email, password, phone, picture, role, can_host) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [
+                    $data['name'],
+                    $data['email'],
+                    Hash::make($data['password']),
+                    $data['phone'],
+                    $data['picture'] ?? null,
+                    $data['role'],
+                    $data['can_host'] ?? false,
+                ]
+            );
+
+            DB::commit();
+
+            return response()->json(['message' => 'User registered successfully'], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Registration failed: ' . $e->getMessage()], 500);
+        }
     }
 
     public function login($data)
     {
-        $user = User::where('email', $data['email'])->first();
+        $user = DB::selectOne('SELECT * FROM users WHERE email = ?', [$data['email']]);
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
@@ -87,7 +98,7 @@ class AuthService
                 return response()->json(['error' => 'Invalid token'], 403);
             }
 
-            $user = User::find($token->claims()->get('uid'));
+            $user = DB::selectOne('SELECT * FROM users WHERE user_id = ?', [$token->claims()->get('uid')]);
 
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
@@ -124,10 +135,8 @@ class AuthService
         }
     }
 
-
-    public function getProfile(User $user)
+    public function getProfile($user)
     {
-        // Format and return the user profile data
         return response()->json([
             'success' => true,
             'profile' => [
@@ -141,35 +150,52 @@ class AuthService
             ]
         ]);
     }
-    public function updateProfile(User $user, array $data)
+
+    public function updateProfile($user, array $data)
     {
         try {
-            // Update user fields (validation already done in controller)
+            DB::beginTransaction();
+
+            $updateFields = [];
+            $params = [];
+
             if (isset($data['name'])) {
-                $user->name = $data['name'];
+                $updateFields[] = 'name = ?';
+                $params[] = $data['name'];
             }
             if (isset($data['email'])) {
-                $user->email = $data['email'];
+                $updateFields[] = 'email = ?';
+                $params[] = $data['email'];
             }
             if (isset($data['phone'])) {
-                $user->phone = $data['phone'];
+                $updateFields[] = 'phone = ?';
+                $params[] = $data['phone'];
             }
             if (isset($data['picture'])) {
-                $user->picture = $data['picture'];
+                $updateFields[] = 'picture = ?';
+                $params[] = $data['picture'];
             }
             if (isset($data['password'])) {
-                $user->password = Hash::make($data['password']);
+                $updateFields[] = 'password = ?';
+                $params[] = Hash::make($data['password']);
             }
             if (isset($data['role'])) {
-                $user->role = $data['role'];
+                $updateFields[] = 'role = ?';
+                $params[] = $data['role'];
             }
 
-            $user->save();
+            if (!empty($updateFields)) {
+                $params[] = $user->user_id;
+                $updateQuery = 'UPDATE users SET ' . implode(', ', $updateFields) . ' WHERE user_id = ?';
+                DB::update($updateQuery, $params);
+            }
+
+            DB::commit();
 
             return response()->json(['message' => 'Profile updated successfully'], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
         }
     }
-
 }
