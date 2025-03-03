@@ -45,18 +45,18 @@ class AuthService
     {
         // Create user directly since validation is handled in the controller
         $user = User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'phone'    => $data['phone'],
-            'picture'  => $data['picture'] ?? null,
-            'role'     => $data['role'],
+            'phone' => $data['phone'],
+            'picture' => $data['picture'] ?? null,
+            'role' => $data['role'],
             'can_host' => $data['can_host'] ?? false,
         ]);
-    
+
         return response()->json(['message' => 'User registered successfully'], 201);
     }
-    
+
     public function login($data)
     {
         $user = User::where('email', $data['email'])->first();
@@ -107,23 +107,23 @@ class AuthService
         try {
             $parser = new JwtParser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
-    
+
             // Check if the token is already expired
             $expiration = $token->claims()->get('exp');
             if ($expiration instanceof \DateTimeImmutable && $expiration <= new \DateTimeImmutable()) {
                 return response()->json(['message' => 'Token already expired'], 401);
             }
-    
+
             // Invalidate the token by adding it to the cache
             $tokenId = $token->claims()->get('jti');
             Cache::put('invalidated_token_' . $tokenId, true, now()->addMinutes(60));
-    
+
             return response()->json(['message' => 'Logged out successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Logout error: ' . $e->getMessage()], 500);
         }
     }
-    
+
 
     public function getProfile(User $user)
     {
@@ -163,13 +163,13 @@ class AuthService
             if (isset($data['role'])) {
                 $user->role = $data['role'];
             }
-    
+
             $user->save();
-    
+
             return response()->json(['message' => 'Profile updated successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
         }
     }
-    
+
 }

@@ -3,6 +3,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class CourseService
 {
@@ -76,7 +77,7 @@ class CourseService
                 ->get();
 
             return $courses;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Error fetching courses: ' . $e->getMessage());
             throw $e;
         }
@@ -96,11 +97,11 @@ class CourseService
                 ->first();
 
             if (!$course) {
-                throw new \Exception('Course not found');
+                throw new Exception('Course not found');
             }
 
             return $course;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Error fetching course: ' . $e->getMessage());
             throw $e;
         }
