@@ -63,6 +63,64 @@ class LessonController extends Controller
         }
     }
 
+    /**
+     * Update an existing lesson.
+     */
+    public function updateLesson(Request $request, $lessonId)
+    {
+        if (!$this->isMentor($request)) {
+            return response()->json(['error' => 'Unauthorized: Only mentors can update lessons'], 403);
+        }
+
+        try {
+            // Fetch the lesson with course data
+            $lesson = $this->lessonService->getLessonById($lessonId);
+
+            // Check if the logged-in user is the course creator
+            if ($lesson->mentor_id !== $this->getUserIdFromToken($request->header('Authorization'))) {
+                return response()->json(['error' => 'Unauthorized: Only the course creator can update lessons'], 403);
+            }
+
+            // Validate the request data
+            $validator = Validator::make($request->all(), [
+                'title' => 'sometimes|required|string|max:255',
+                'description' => 'nullable|string',
+                'content' => 'nullable|string',
+                'video_url' => 'nullable|url',
+                'duration' => 'nullable|integer|min:0',
+                'order' => 'nullable|integer|min:0',
+                'is_published' => 'nullable|boolean',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            // Update the lesson
+            $updatedLesson = $this->lessonService->updateLesson($lessonId, $request->all());
+            return response()->json(['message' => 'Lesson updated successfully', 'lesson' => $updatedLesson], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error updating lesson: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Get a single lesson by ID.
+     */
+    public function getLessonById(Request $request, $lessonId)
+    {
+        if (!$this->isMentor($request)) {
+            return response()->json(['error' => 'Unauthorized: Only mentors can view this lesson'], 403);
+        }
+
+        try {
+            $lesson = $this->lessonService->getLessonById($lessonId);
+            return response()->json(['lesson' => $lesson], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error fetching lesson: ' . $e->getMessage()], 500);
+        }
+    }
+
 
     private function isMentor(Request $request)
     {
