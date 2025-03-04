@@ -14,7 +14,7 @@ const CreateCourse = ({ isDarkMode }) => {
     rating: 0, // Optional, numeric, min 0, max 5
     picture: '', // Optional, URL
     level: 'Beginner', // Required, string
-    type: 'Video', // Required, string
+    type: 'Development', // Required, string
     lesson_number: 1, // Required, integer, min 1
     length_in_weeks: 1, // Required, integer, min 1
     picture_file: null, // For file upload
@@ -234,7 +234,7 @@ const CreateCourse = ({ isDarkMode }) => {
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value })}
             >
-              <option value="Video">Video</option>
+              <option value="Development">Development</option>
               <option value="Text">Text</option>
               <option value="Interactive">Interactive</option>
             </select>
