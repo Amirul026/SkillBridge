@@ -115,12 +115,20 @@ const LearnerDashboard = ({ isDarkMode }) => {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">My Learning</h2>
-            <button
-              onClick={() => navigate('/learning')}
-              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
-            >
-              View All
-            </button>
+            <div>
+              <button
+                onClick={() => navigate('/learning')}
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium mr-4"
+              >
+                View All
+              </button>
+              <button
+                onClick={() => navigate('/quiz/1')} // Replace 1 with the actual course ID
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+              >
+                Take Quiz
+              </button>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

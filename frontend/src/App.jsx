@@ -10,11 +10,12 @@ import MentorDashboard from "./pages/MentorDashboard";
 import LearnerDashboard from "./pages/LearnerDashboard";
 import CreateCourse from "./pages/CreateCourse";
 import MentorCoursesPage from "./pages/MentorCoursesPage";
-import ChatPage from "./pages/ChatPage"; // Import the ChatPage
-import LeaderboardPage from "./pages/LeaderboardPage"; // Import the LeaderboardPage
-import IndividualCoursePage from "./pages/IndividualCoursePage"; // Import the IndividualCoursePage
+import ChatPage from "./pages/ChatPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
+import IndividualCoursePage from "./pages/IndividualCoursePage";
+import QuizPage from "./pages/QuizPage"; // Import the QuizPage
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import styles
+import "react-toastify/dist/ReactToastify.css";
 import { isAuthenticated } from './services/authService';
 
 const App = () => {
@@ -31,9 +32,7 @@ const App = () => {
               <Route path="/register" element={<Register isDarkMode={isDarkMode} />} />
               <Route path="/login" element={<Login isDarkMode={isDarkMode} />} />
               <Route path="/forgot-password" element={<ForgotPassword isDarkMode={isDarkMode} />} />
-              
               <Route path="/courses" element={<CoursesPage isDarkMode={isDarkMode} />} />
-              
               <Route path="/seminar" element={<div>Seminar Page</div>} />
               <Route path="/help" element={<div>Help Center</div>} />
               <Route path="/terms" element={<div>Terms of Service</div>} />
@@ -125,6 +124,16 @@ const App = () => {
                 element={
                   isAuthenticated() ? (
                     <IndividualCoursePage isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/quiz/:courseId"
+                element={
+                  isAuthenticated() ? (
+                    <QuizPage isDarkMode={isDarkMode} />
                   ) : (
                     <Navigate to="/login" />
                   )

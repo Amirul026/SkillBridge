@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\QuizController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,18 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::delete('/lessons/{lessonId}', [LessonController::class, 'deleteLesson']);
     Route::get('/lessons/course/{courseId}', [LessonController::class, 'getLessonsByCourse']);
     Route::get('/lessons/{lessonId}', [LessonController::class, 'getLessonById']);
+
+    
+
+
+
+    // Fetch quiz questions
+    Route::get('/quiz/questions', [QuizController::class, 'getQuizQuestions']);
+    
+    // Submit quiz answers
+    Route::post('/quiz/submit', [QuizController::class, 'submitQuizAnswers']);
+    
+    
 });
 
 // Upload route
