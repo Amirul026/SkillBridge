@@ -48,32 +48,7 @@ export const deleteCourse = async (courseId) => {
   }
 };
 
-// Get all courses
-// export const getCourses = async () => {
-//   try {
-//     const response = await api.get("/courses", {
-//       headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
-//     });
-//     return response.data.courses;
-//   } catch (error) {
-//     toast.error(error.response?.data?.error || "Failed to fetch courses!");
-//     throw error;
-//   }
-// };
 
-// Get a single course by ID
-// export const getCourseById = async (courseId) => {
-//   try {
-//     const response = await api.get(`/courses/${courseId}`, {
-//       headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
-//     });
-
-//     return response.data.course;
-//   } catch (error) {
-//     toast.error(error.response?.data?.error || "Failed to fetch course!");
-//     throw error;
-//   }
-// };
 
 
 // Get all courses, or get courses for a mentor
@@ -88,6 +63,7 @@ export const getCourses = async (mentor = false) => {
       headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
     });
 
+    console.log("API Response (getCourses):", response.data); // Add this line
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.error || "Failed to fetch courses!");

@@ -1,269 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Star, Clock, Users, BookOpen, GraduationCap, ChevronDown, Loader2 } from 'lucide-react';
+import { Search, Filter, Star, Clock, Users, BookOpen, Loader2 } from 'lucide-react';
+import { getCourses } from '../services/courseService'; // Import your getCourses function
 
-// Expanded course data with network images
-const coursesData = [
-    {
-      id: 1,
-      title: "Introduction to Programming",
-      category: "Development",
-      instructor: "John Doe",
-      rating: 4.5,
-      students: 1200,
-      duration: "6 weeks",
-      price: 99.99,
-      image: "https://images.unsplash.com/photo-1550439062-609e1531270e", // Network image
-      level: "Beginner",
-      lessons: 24
-    },
-    {
-      id: 2,
-      title: "Data Science Fundamentals",
-      category: "Data Science",
-      instructor: "Jane Smith",
-      rating: 4.7,
-      students: 950,
-      duration: "8 weeks",
-      price: 129.99,
-      image: "https://images.pexels.com/photos/4145153/pexels-photo-4145153.jpeg", // Network image
-      level: "Intermediate",
-      lessons: 30
-    },
-    {
-      id: 3,
-      title: "Digital Marketing Mastery",
-      category: "Marketing",
-      instructor: "Emily Johnson",
-      rating: 4.6,
-      students: 800,
-      duration: "5 weeks",
-      price: 89.99,
-      image: "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931", // Network image
-      level: "Beginner",
-      lessons: 20
-    },
-    {
-      id: 4,
-      title: "UI/UX Design Principles",
-      category: "Design",
-      instructor: "Michael Brown",
-      rating: 4.8,
-      students: 1100,
-      duration: "7 weeks",
-      price: 109.99,
-      image: "https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg", // Network image
-      level: "Intermediate",
-      lessons: 28
-    },
-    {
-      id: 5,
-      title: "Business Strategy Essentials",
-      category: "Business",
-      instructor: "Sarah Lee",
-      rating: 4.4,
-      students: 700,
-      duration: "4 weeks",
-      price: 79.99,
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40", // Network image
-      level: "Beginner",
-      lessons: 16
-    },
-    {
-      id: 6,
-      title: "Advanced JavaScript",
-      category: "Development",
-      instructor: "David Wilson",
-      rating: 4.9,
-      students: 1500,
-      duration: "10 weeks",
-      price: 149.99,
-      image: "https://images.pexels.com/photos/5483071/pexels-photo-5483071.jpeg", // Network image
-      level: "Advanced",
-      lessons: 40
-    },
-    {
-      id: 7,
-      title: "Machine Learning Basics",
-      category: "Data Science",
-      instructor: "Laura Green",
-      rating: 4.7,
-      students: 1300,
-      duration: "9 weeks",
-      price: 139.99,
-      image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd", // Network image
-      level: "Intermediate",
-      lessons: 35
-    },
-    {
-      id: 8,
-      title: "Social Media Marketing",
-      category: "Marketing",
-      instructor: "Chris Evans",
-      rating: 4.5,
-      students: 900,
-      duration: "6 weeks",
-      price: 99.99,
-      image: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg", // Network image
-      level: "Beginner",
-      lessons: 22
-    },
-    {
-      id: 9,
-      title: "Advanced Cloud Computing",
-      category: "Development",
-      instructor: "Mark Thompson",
-      rating: 4.8,
-      students: 1543,
-      duration: "10 weeks",
-      price: 139.99,
-      image: "https://images.unsplash.com/photo-1512758017271-d7b84c2113f1", // Network image
-      level: "Advanced",
-      lessons: 38
-    },
-    {
-      id: 10,
-      title: "Python for Data Analysis",
-      category: "Data Science",
-      instructor: "Anna White",
-      rating: 4.6,
-      students: 1200,
-      duration: "7 weeks",
-      price: 119.99,
-      image: "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg", // Network image
-      level: "Intermediate",
-      lessons: 30
-    },
-    {
-      id: 11,
-      title: "Graphic Design Fundamentals",
-      category: "Design",
-      instructor: "Robert Harris",
-      rating: 4.5,
-      students: 850,
-      duration: "6 weeks",
-      price: 99.99,
-      image: "https://images.unsplash.com/photo-1614028674026-a65e31bfd27c", // Network image
-      level: "Beginner",
-      lessons: 24
-    },
-    {
-      id: 12,
-      title: "Financial Planning Basics",
-      category: "Business",
-      instructor: "Linda Martinez",
-      rating: 4.4,
-      students: 600,
-      duration: "5 weeks",
-      price: 89.99,
-      image: "https://images.pexels.com/photos/4386431/pexels-photo-4386431.jpeg", // Network image
-      level: "Beginner",
-      lessons: 20
-    },
-    {
-      id: 13,
-      title: "Full-Stack Web Development",
-      category: "Development",
-      instructor: "James Clark",
-      rating: 4.9,
-      students: 1800,
-      duration: "12 weeks",
-      price: 169.99,
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085", // Network image
-      level: "Advanced",
-      lessons: 45
-    },
-    {
-      id: 14,
-      title: "Deep Learning with TensorFlow",
-      category: "Data Science",
-      instructor: "Sophia Adams",
-      rating: 4.8,
-      students: 1400,
-      duration: "10 weeks",
-      price: 149.99,
-      image: "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg", // Network image
-      level: "Advanced",
-      lessons: 40
-    },
-    {
-      id: 15,
-      title: "Content Marketing Strategies",
-      category: "Marketing",
-      instructor: "Daniel Lewis",
-      rating: 4.5,
-      students: 950,
-      duration: "6 weeks",
-      price: 99.99,
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978", // Network image
-      level: "Intermediate",
-      lessons: 25
-    },
-    {
-      id: 16,
-      title: "Advanced UI/UX Design",
-      category: "Design",
-      instructor: "Olivia Walker",
-      rating: 4.7,
-      students: 1100,
-      duration: "8 weeks",
-      price: 129.99,
-      image: "https://images.pexels.com/photos/11035386/pexels-photo-11035386.jpeg", // Network image
-      level: "Advanced",
-      lessons: 35
-    },
-    {
-      id: 17,
-      title: "Entrepreneurship 101",
-      category: "Business",
-      instructor: "William Hall",
-      rating: 4.6,
-      students: 750,
-      duration: "5 weeks",
-      price: 89.99,
-      image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902", // Network image
-      level: "Beginner",
-      lessons: 20
-    },
-    {
-      id: 18,
-      title: "React Native Mobile Development",
-      category: "Development",
-      instructor: "Ethan Young",
-      rating: 4.8,
-      students: 1600,
-      duration: "10 weeks",
-      price: 149.99,
-      image: "https://images.pexels.com/photos/5483077/pexels-photo-5483077.jpeg", // Network image
-      level: "Advanced",
-      lessons: 40
-    },
-    {
-      id: 19,
-      title: "Data Visualization with D3.js",
-      category: "Data Science",
-      instructor: "Ava King",
-      rating: 4.7,
-      students: 1300,
-      duration: "8 weeks",
-      price: 129.99,
-      image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3", // Network image
-      level: "Intermediate",
-      lessons: 30
-    },
-    {
-      id: 20,
-      title: "E-commerce Marketing",
-      category: "Marketing",
-      instructor: "Noah Scott",
-      rating: 4.5,
-      students: 900,
-      duration: "6 weeks",
-      price: 99.99,
-      image: "https://images.pexels.com/photos/3183153/pexels-photo-3183153.jpeg", // Network image
-      level: "Intermediate",
-      lessons: 25
-    }
-  ];
 const categories = ["All", "Development", "Data Science", "Marketing", "Design", "Business"];
 const levels = ["All Levels", "Beginner", "Intermediate", "Advanced"];
 const sortOptions = [
@@ -285,24 +23,35 @@ const CoursesPage = ({ isDarkMode }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [coursesData, setCoursesData] = useState([]);
 
-  // Simulate loading state
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    const fetchCourses = async () => {
+      try {
+        const courses = await getCourses();
+        setCoursesData(courses);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchCourses();
   }, []);
 
   // Filter courses based on all criteria
   const filteredCourses = coursesData.filter(course => {
-    const matchesCategory = selectedCategory === "All" || course.category === selectedCategory;
-    const matchesLevel = selectedLevel === "All Levels" || course.level === selectedLevel;
-    const matchesPrice = course.price >= priceRange[0] && course.price <= priceRange[1];
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesLevel && matchesPrice && matchesSearch;
+   // const matchesCategory = selectedCategory === "All" || course.category === selectedCategory;
+    //const matchesLevel = selectedLevel === "All Levels" || course.level === selectedLevel;
+    //const matchesPrice = course.price >= priceRange[0] && course.price <= priceRange[1];
+    //const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+     // course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
+    //return matchesCategory && matchesLevel && matchesPrice && matchesSearch;
+    return true;
   });
+
+  console.log("Filtered Courses:", filteredCourses); 
 
   // Sort courses
   const sortedCourses = [...filteredCourses].sort((a, b) => {
@@ -378,6 +127,7 @@ const CoursesPage = ({ isDarkMode }) => {
       </div>
     );
   };
+
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
@@ -500,7 +250,7 @@ const CoursesPage = ({ isDarkMode }) => {
                   } shadow-md hover:shadow-lg transition-shadow`}
                 >
                   <img
-                    src={course.image} // Network image URL
+                    src={course.picture} // Network image URL
                     alt={course.title}
                     className="w-full h-40 object-cover" // Ensure the image scales properly
                   />
