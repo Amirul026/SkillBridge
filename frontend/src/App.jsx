@@ -5,17 +5,18 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import CoursesPage from './pages/CoursesPage';
-import Profile from "./pages/Profile";
-import MentorDashboard from "./pages/MentorDashboard";
-import LearnerDashboard from "./pages/LearnerDashboard";
-import CreateCourse from "./pages/CreateCourse";
-import MentorCoursesPage from "./pages/MentorCoursesPage";
-import ChatPage from "./pages/ChatPage";
-import LeaderboardPage from "./pages/LeaderboardPage";
-import IndividualCoursePage from "./pages/IndividualCoursePage";
-import QuizPage from "./pages/QuizPage"; // Import the QuizPage
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Profile from './pages/Profile';
+import MentorDashboard from './pages/MentorDashboard';
+import LearnerDashboard from './pages/LearnerDashboard';
+import CreateCourse from './pages/CreateCourse';
+import MentorCoursesPage from './pages/MentorCoursesPage';
+import ChatPage from './pages/ChatPage';
+import LeaderboardPage from './pages/LeaderboardPage';
+import IndividualCoursePage from './pages/IndividualCoursePage';
+import QuizPage from './pages/QuizPage'; 
+import CoursePage from './components/CoursePage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { isAuthenticated } from './services/authService';
 
 const App = () => {
@@ -134,6 +135,17 @@ const App = () => {
                 element={
                   isAuthenticated() ? (
                     <QuizPage isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              {/* New Route for CoursePage */}
+              <Route
+                path="/course/:courseId"
+                element={
+                  isAuthenticated() ? (
+                    <CoursePage isDarkMode={isDarkMode} />
                   ) : (
                     <Navigate to="/login" />
                   )
