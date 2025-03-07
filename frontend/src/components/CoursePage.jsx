@@ -25,7 +25,7 @@ const CoursePage = ({ isDarkMode }) => {
       .then((profile) => {
         setUserRole(profile.role);
         setUserId(profile.id);
-        setRoomName(`course-${courseId}-user-${profile.id}`);
+        setRoomName(`course-${courseId}`);
         setLoading(false);
         console.log("User Role:", profile.role);
       })

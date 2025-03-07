@@ -70,3 +70,18 @@ export const getCourses = async (mentor = false) => {
     throw error;
   }
 };
+
+
+export const getEnrolledCourses = async () => {
+  const token = getAuthToken();
+  const response = await fetch(`/api/users/enrolled-courses`, {
+      headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
+  });
+  if (!response.ok) {
+      throw new Error('Failed to fetch enrolled courses');
+  }
+  return response.json();
+};

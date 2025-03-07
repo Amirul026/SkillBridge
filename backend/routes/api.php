@@ -9,6 +9,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\MeetingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,3 +75,11 @@ Route::middleware(['auth.jwt'])->group(function () {
 
 // Upload route
 Route::post('/upload', [UploadController::class, 'upload']);
+
+//meeting management
+Route::post('/meetings', [MeetingController::class, 'store']);
+Route::get('/meetings/{meeting}', [MeetingController::class, 'show']);
+
+
+//enroll user
+Route::get('/users/enrolled-courses', [AuthController::class, 'getEnrolledCourses']); 

@@ -20,4 +20,13 @@ class User extends Authenticatable
     protected $hidden = ['password'];
 
     public $timestamps = true;
+
+
+        /**
+     * Relationship: Courses (Courses this user is enrolled in)
+     */
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id'); 
+    }
 }

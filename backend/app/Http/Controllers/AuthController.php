@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -134,5 +135,19 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    public function getEnrolledCourses(Request $request)
+    {
+        // Retrieve the authenticated user from the request
+        $user = $request->attributes->get('user');
+    
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+    
+        // Call the authService to get the enrolled courses
+        $courses = $this->authService->getEnrolledCourses($user); // Check this line
+        return response()->json($courses);
     }
 }

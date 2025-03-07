@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Star, Clock, Users, BookOpen, Loader2 } from 'lucide-react';
 import { getCourses } from '../services/courseService'; // Import your getCourses function
+import LiveSessionsPage from '../components/LiveSessionsPage'; // Adjust the path as needed
+import { Link } from 'react-router-dom'; // Import Link
 
 const categories = ["All", "Development", "Data Science", "Marketing", "Design", "Business"];
 const levels = ["All Levels", "Beginner", "Intermediate", "Advanced"];
@@ -238,94 +240,75 @@ const CoursesPage = ({ isDarkMode }) => {
           Showing {paginatedCourses.length} of {filteredCourses.length} courses
         </p>
 
-        {/* Courses Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {isLoading
-            ? Array(8).fill(0).map((_, index) => <LoadingSkeleton key={index} />)
-            : paginatedCourses.map(course => (
-                <div
-                  key={course.id}
-                  className={`rounded-lg overflow-hidden ${
-                    isDarkMode ? 'bg-gray-800' : 'bg-white'
-                  } shadow-md hover:shadow-lg transition-shadow`}
-                >
-                  <img
-                    src={course.picture} // Network image URL
-                    alt={course.title}
-                    className="w-full h-40 object-cover" // Ensure the image scales properly
-                  />
-                  <div className="p-4">
-                    <div className="flex justify-between mb-2">
-                      <span className={`text-sm ${
-                        isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                      }`}>
-                        {course.category}
-                      </span>
-                      <span className={`text-sm ${
-                        isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                      }`}>
-                        {course.level}
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
-                    <p className={`text-sm ${
-                      isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                    } mb-4`}>
-                      by {course.instructor}
-                    </p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Star size={16} className="text-yellow-400" />
-                      <span className={`text-sm ${
-                        isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                      }`}>
-                        {course.rating} ({course.students} students)
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2 mb-3">
-                      <div className="flex items-center gap-2">
-                        <Clock size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                        <span className={`text-sm ${
-                          isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                          {course.duration}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Users size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                        <span className={`text-sm ${
-                          isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                          {course.lessons} lessons
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BookOpen size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-                        <span className={`text-sm ${
-                          isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
-                          {course.level}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center pt-3 border-t">
-                      <span className={`text-lg font-bold ${
-                        isDarkMode ? 'text-white' : 'text-gray-900'
-                      }`}>
-                        ${course.price}
-                      </span>
-                      <button
-                        className={`px-4 py-2 rounded-lg ${
-                          isDarkMode ? 'bg-white text-gray-900' : 'bg-[#1e1a53] text-white'
-                        } hover:opacity-90 transition-opacity`}
-                      >
-                        Enroll Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-          }
+  {isLoading
+    ? Array(8).fill(0).map((_, index) => <LoadingSkeleton key={index} />)
+    : paginatedCourses.map(course => (
+        <div 
+          key={course.course_id}
+          className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md hover:shadow-lg transition-shadow`}
+        >
+          <img
+            src={course.picture}
+            alt={course.title}
+            className="w-full h-40 object-cover"
+          />
+          <div className="p-4">
+            <div className="flex justify-between mb-2">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                {course.category}
+              </span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                {course.level}
+              </span>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
+              by {course.instructor}
+            </p>
+            <div className="flex items-center gap-2 mb-3">
+              <Star size={16} className="text-yellow-400" />
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                {course.rating} ({course.students} students)
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="flex items-center gap-2">
+                <Clock size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  {course.duration}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  {course.lessons} lessons
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <BookOpen size={16} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
+                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  {course.level}
+                </span>
+              </div>
+            </div>
+            <div className="flex justify-between items-center pt-3 border-t">
+              <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                ${course.price}
+              </span>
+              <Link // Link only on the button
+                key={course.id}
+                to={`/course/${course.course_id}`}
+                className={`px-4 py-2 rounded-lg ${isDarkMode ? 'bg-white text-gray-900' : 'bg-[#1e1a53] text-white'} hover:opacity-90 transition-opacity no-underline`}
+              >
+                Join Meeting
+              </Link>
+            </div>
+          </div>
         </div>
+      ))
+  }
+</div>
 
         {/* Pagination */}
         {!isLoading && totalPages > 1 && (
