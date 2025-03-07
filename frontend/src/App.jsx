@@ -14,6 +14,7 @@ import ChatPage from "./pages/ChatPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import IndividualCoursePage from "./pages/IndividualCoursePage";
 import QuizPage from "./pages/QuizPage"; // Import the QuizPage
+import CreateLesson from "./pages/CreateLesson"; // Import the CreateLesson
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isAuthenticated } from './services/authService';
@@ -84,6 +85,16 @@ const App = () => {
                 element={
                   isAuthenticated() && localStorage.getItem('userRole') === 'Mentor' ? (
                     <CreateCourse isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/create-lesson"
+                element={
+                  isAuthenticated() && localStorage.getItem('userRole') === 'Mentor' ? (
+                    <CreateLesson isDarkMode={isDarkMode} />
                   ) : (
                     <Navigate to="/login" />
                   )

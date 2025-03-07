@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Upload } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { createCourse } from '../services/courseService'; // Import the createCourse function
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Upload } from "lucide-react";
+import { toast } from "react-toastify";
+import { createCourse } from "../services/courseService"; // Import the createCourse function
 
 const CreateCourse = ({ isDarkMode }) => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [formData, setFormData] = useState({
     is_paywalled: false, // Required, boolean
-    title: '', // Required, string, max 255
+    title: "", // Required, string, max 255
     price: 0, // Required, numeric, min 0
-    description: '', // Required, string
+    description: "", // Required, string
     rating: 0, // Optional, numeric, min 0, max 5
-    picture: '', // Optional, URL
-    level: 'Beginner', // Required, string
-    type: 'Development', // Required, string
+    picture: "", // Optional, URL
+    level: "Beginner", // Required, string
+    type: "Development", // Required, string
     lesson_number: 1, // Required, integer, min 1
     length_in_weeks: 1, // Required, integer, min 1
     picture_file: null, // For file upload
@@ -47,10 +47,10 @@ const CreateCourse = ({ isDarkMode }) => {
       // Upload profile picture if provided
       if (formData.picture_file) {
         const fileUploadFormData = new FormData();
-        fileUploadFormData.append('picture_file', formData.picture_file);
+        fileUploadFormData.append("picture_file", formData.picture_file);
 
-        const uploadResponse = await fetch('http://127.0.0.1:8000/api/upload', {
-          method: 'POST',
+        const uploadResponse = await fetch("http://127.0.0.1:8000/api/upload", {
+          method: "POST",
           body: fileUploadFormData,
         });
 
@@ -85,7 +85,7 @@ const CreateCourse = ({ isDarkMode }) => {
       toast.success("Course created successfully!");
 
       // Redirect to MentorCoursesPage after successful creation
-      navigate('/mentor-courses');
+      navigate("/mentor-courses");
     } catch (error) {
       console.error("Course Creation Error:", error);
 
@@ -101,11 +101,17 @@ const CreateCourse = ({ isDarkMode }) => {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div
+      className={`min-h-screen ${
+        isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
+      }`}
+    >
       {/* Hero Section */}
-      <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} py-8`}>
+      <div className={`${isDarkMode ? "bg-gray-800" : "bg-white"} py-8`}>
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">Create a New Course</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-3">
+            Create a New Course
+          </h1>
           <p className="text-lg text-gray-500 max-w-2xl">
             Design and publish a new course for learners.
           </p>
@@ -117,12 +123,28 @@ const CreateCourse = ({ isDarkMode }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Photo Upload */}
           <div className="flex items-center space-x-4">
-            <div className={`w-32 h-32 rounded-lg overflow-hidden border-2 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'} relative`}>
+            <div
+              className={`w-32 h-32 rounded-lg overflow-hidden border-2 ${
+                isDarkMode ? "border-gray-600" : "border-gray-200"
+              } relative`}
+            >
               {photoPreview ? (
-                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                <img
+                  src={photoPreview}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <div className={`w-full h-full flex items-center justify-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                  <Upload className={`w-8 h-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                <div
+                  className={`w-full h-full flex items-center justify-center ${
+                    isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                  }`}
+                >
+                  <Upload
+                    className={`w-8 h-8 ${
+                      isDarkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  />
                 </div>
               )}
             </div>
@@ -136,7 +158,11 @@ const CreateCourse = ({ isDarkMode }) => {
               />
               <label
                 htmlFor="course-photo-upload"
-                className={`cursor-pointer text-sm ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}
+                className={`cursor-pointer text-sm ${
+                  isDarkMode
+                    ? "text-blue-400 hover:text-blue-300"
+                    : "text-blue-600 hover:text-blue-500"
+                }`}
               >
                 Upload Course Image
               </label>
@@ -145,22 +171,38 @@ const CreateCourse = ({ isDarkMode }) => {
 
           {/* Title */}
           <div>
-            <label htmlFor="title" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="title"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Course Title
             </label>
             <input
               type="text"
               id="title"
               required
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
             />
           </div>
 
           {/* Price */}
           <div>
-            <label htmlFor="price" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="price"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Price
             </label>
             <input
@@ -168,29 +210,51 @@ const CreateCourse = ({ isDarkMode }) => {
               id="price"
               required
               min="0"
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, price: parseFloat(e.target.value) })
+              }
             />
           </div>
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="description"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Description
             </label>
             <textarea
               id="description"
               required
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
             />
           </div>
 
           {/* Rating */}
           <div>
-            <label htmlFor="rating" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="rating"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Rating (0-5)
             </label>
             <input
@@ -198,23 +262,40 @@ const CreateCourse = ({ isDarkMode }) => {
               id="rating"
               min="0"
               max="5"
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.rating}
-              onChange={(e) => setFormData({ ...formData, rating: parseFloat(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, rating: parseFloat(e.target.value) })
+              }
             />
           </div>
 
           {/* Level */}
           <div>
-            <label htmlFor="level" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="level"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Level
             </label>
             <select
               id="level"
               required
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.level}
-              onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, level: e.target.value })
+              }
             >
               <option value="Beginner">Beginner</option>
               <option value="Intermediate">Intermediate</option>
@@ -224,15 +305,26 @@ const CreateCourse = ({ isDarkMode }) => {
 
           {/* Type */}
           <div>
-            <label htmlFor="type" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="type"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Type
             </label>
             <select
               id="type"
               required
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, type: e.target.value })
+              }
             >
               <option value="Development">Development</option>
               <option value="Text">Text</option>
@@ -242,7 +334,12 @@ const CreateCourse = ({ isDarkMode }) => {
 
           {/* Lesson Number */}
           <div>
-            <label htmlFor="lesson_number" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="lesson_number"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Number of Lessons
             </label>
             <input
@@ -250,15 +347,29 @@ const CreateCourse = ({ isDarkMode }) => {
               id="lesson_number"
               required
               min="1"
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.lesson_number}
-              onChange={(e) => setFormData({ ...formData, lesson_number: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  lesson_number: parseInt(e.target.value),
+                })
+              }
             />
           </div>
 
           {/* Length in Weeks */}
           <div>
-            <label htmlFor="length_in_weeks" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="length_in_weeks"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Length in Weeks
             </label>
             <input
@@ -266,15 +377,29 @@ const CreateCourse = ({ isDarkMode }) => {
               id="length_in_weeks"
               required
               min="1"
-              className={`mt-1 block w-full rounded-md shadow-sm ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' : 'bg-gray-200 border-gray-300 focus:border-blue-500'} px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+              className={`mt-1 block w-full rounded-md shadow-sm ${
+                isDarkMode
+                  ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                  : "bg-gray-200 border-gray-300 focus:border-blue-500"
+              } px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500`}
               value={formData.length_in_weeks}
-              onChange={(e) => setFormData({ ...formData, length_in_weeks: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  length_in_weeks: parseInt(e.target.value),
+                })
+              }
             />
           </div>
 
           {/* Is Paywalled */}
           <div>
-            <label htmlFor="is_paywalled" className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label
+              htmlFor="is_paywalled"
+              className={`block text-sm font-medium ${
+                isDarkMode ? "text-gray-200" : "text-gray-700"
+              }`}
+            >
               Is Paywalled?
             </label>
             <input
@@ -282,7 +407,9 @@ const CreateCourse = ({ isDarkMode }) => {
               id="is_paywalled"
               className="mt-1"
               checked={formData.is_paywalled}
-              onChange={(e) => setFormData({ ...formData, is_paywalled: e.target.checked })}
+              onChange={(e) =>
+                setFormData({ ...formData, is_paywalled: e.target.checked })
+              }
             />
           </div>
 

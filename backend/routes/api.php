@@ -53,23 +53,23 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/mentor/courses', [CourseController::class, 'getCoursesByMentor']); // Courses by mentor
 
     // Lesson routes
-    Route::post('/lessons', [LessonController::class, 'createLesson']);
+    Route::post('/lessons/create', [LessonController::class, 'createLesson']);
     Route::put('/lessons/{lessonId}', [LessonController::class, 'updateLesson']);
     Route::delete('/lessons/{lessonId}', [LessonController::class, 'deleteLesson']);
     Route::get('/lessons/course/{courseId}', [LessonController::class, 'getLessonsByCourse']);
     Route::get('/lessons/{lessonId}', [LessonController::class, 'getLessonById']);
 
-    
+
 
 
 
     // Fetch quiz questions
     Route::get('/quiz/questions', [QuizController::class, 'getQuizQuestions']);
-    
+
     // Submit quiz answers
     Route::post('/quiz/submit', [QuizController::class, 'submitQuizAnswers']);
-    
-    
+
+
 });
 
 // Upload route
