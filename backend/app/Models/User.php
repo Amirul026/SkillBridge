@@ -14,10 +14,20 @@ class User extends Authenticatable
     protected $primaryKey = 'user_id';
 
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'picture', 'role', 'can_host'
+        'name',
+        'email',
+        'password',
+        'phone',
+        'picture',
+        'role',
+        'can_host'
     ];
 
     protected $hidden = ['password'];
 
     public $timestamps = true;
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
 }

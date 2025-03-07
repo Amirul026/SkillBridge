@@ -68,4 +68,9 @@ class Course extends Model
     {
         return $query->where('is_paywalled', true);
     }
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
 }
