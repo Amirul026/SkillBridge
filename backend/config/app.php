@@ -124,6 +124,18 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+    /*
+    |--------------------------------------------------------------------------
+    | JWT Secret
+    |--------------------------------------------------------------------------
+    |
+    | The secret used for signing the JWT token. Make sure it's set correctly
+    | in the .env file.
+    |
+    */
+    'jwt_secret' => env('JWT_SECRET'),
+    'jwt_ttl' => env('JWT_TTL', 3600),  
+    'jwt_refresh_ttl' => env('JWT_REFRESH_TTL', 86400), 
 
     /*
     |--------------------------------------------------------------------------

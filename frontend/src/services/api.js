@@ -1,4 +1,6 @@
 import axios from "axios";
+import { refreshToken, logout } from "./authService"; 
+import Cookies from "js-cookie";
 
 const api = axios.create({
   baseURL: "http://localhost:8000/api",
@@ -8,5 +10,38 @@ const api = axios.create({
     Accept: "application/json",
   },
 });
+
+// Add a request interceptor to add the Authorization header
+api.interceptors.request.use(
+  (config) => {
+    const accessToken = Cookies.get("access_token");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Add a response interceptor to handle token refresh
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Ensure error.response exists before accessing its properties
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        await refreshToken(); // Refresh the token
+        return api(originalRequest); // Retry the original request
+      } catch (refreshError) {
+        logout(); // Log out the user on refresh failure
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
