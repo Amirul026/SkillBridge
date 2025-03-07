@@ -9,6 +9,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\ProgressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +61,10 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/lessons/{lessonId}', [LessonController::class, 'getLessonById']);
 
 
-
+    //Lesson Progress Route
+    Route::get('/courses/{courseId}/progress', [ProgressController::class, 'getProgress']);
+    Route::post('/courses/{courseId}/progress', [ProgressController::class, 'updateProgress']);
+    Route::post('/courses/{courseId}/progress/decrement', [ProgressController::class, 'decrementProgress']);
 
 
     // Fetch quiz questions
