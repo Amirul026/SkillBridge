@@ -40,11 +40,11 @@ class Course extends Model
     /**
      * Relationship: Reviews (Associated with this course)
      */
-    public function reviews()
-    {
-        return $this->hasMany(Review::class, 'course_id', 'course_id');
-    }
-
+    /*     public function reviews()
+        {
+            return $this->hasMany(Review::class, 'course_id', 'course_id');
+        }
+     */
     /**
      * Relationship: Lessons (Associated with this course)
      */
