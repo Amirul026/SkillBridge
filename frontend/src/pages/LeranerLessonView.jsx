@@ -39,8 +39,6 @@ const LearnerLessonView = () => {
     return <div className="error-message">Lesson not found.</div>;
   }
 
-  console.log("Lesson details:", lesson);
-
   return (
     <div className="lesson-container">
       <h1 className="lesson-title">{lesson.title}</h1>
