@@ -47,9 +47,6 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::post('/courses/create', [CourseController::class, 'createCourse']);
     Route::put('/courses/{courseId}', [CourseController::class, 'updateCourse']);
     Route::delete('/courses/{courseId}', [CourseController::class, 'deleteCourse']);
-    // Route::get('/courses', [CourseController::class, 'getCourses']);
-    // Route::get('/courses/{courseId}', [CourseController::class, 'getCourse']);
-
     Route::get('/courses', [CourseController::class, 'index']); // All courses
     Route::get('/mentor/courses', [CourseController::class, 'getCoursesByMentor']); // Courses by mentor
 
@@ -60,20 +57,14 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/lessons/course/{courseId}', [LessonController::class, 'getLessonsByCourse']);
     Route::get('/lessons/{lessonId}', [LessonController::class, 'getLessonById']);
 
+    // Progress routes
+    Route::post('/courses/{courseId}/lessons/{lessonId}/complete', [ProgressController::class, 'markLessonAsComplete']);
+    Route::post('/courses/{courseId}/lessons/{lessonId}/incomplete', [ProgressController::class, 'markLessonAsIncomplete']);
+    Route::get('/courses/{courseId}/progress', [ProgressController::class, 'getUserProgressForCourse']);
 
-    //Lesson Progress Route
-    Route::get('/courses/{courseId}/progress', [ProgressController::class, 'getProgress']);
-    Route::post('/courses/{courseId}/progress', [ProgressController::class, 'updateProgress']);
-    Route::post('/courses/{courseId}/progress/decrement', [ProgressController::class, 'decrementProgress']);
-
-
-    // Fetch quiz questions
+    // Quiz routes
     Route::get('/quiz/questions', [QuizController::class, 'getQuizQuestions']);
-
-    // Submit quiz answers
     Route::post('/quiz/submit', [QuizController::class, 'submitQuizAnswers']);
-
-
 });
 
 // Upload route

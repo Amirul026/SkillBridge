@@ -3,121 +3,87 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
-use Exception;
+use App\Models\Progress;
+use App\Models\User;
+use App\Models\Course;
+use App\Models\Lesson;
 
 class ProgressService
 {
-    /**
-     * Get the current progress for a user and course.
-     *
-     * @param int $courseId
-     * @param int $userId
-     * @return array
-     * @throws Exception
-     */
-    public function getProgress(int $courseId, int $userId)
+
+    public function markLessonAsComplete($userId, $courseId, $lessonId)
     {
-        try {
-            // Fetch the current progress for the user and course
-            $progress = DB::table('progress')
-                ->where('user_id', $userId)
-                ->where('course_id', $courseId)
-                ->first();
+        // Check if the progress record already exists
+        $progress = DB::selectOne("
+            SELECT * FROM progress
+            WHERE user_id = ? AND course_id = ? AND lesson_id = ?
+        ", [$userId, $courseId, $lessonId]);
 
-            // Fetch the total number of lessons for the course
-            $totalLessons = DB::table('lessons')
-                ->where('course_id', $courseId)
-                ->count();
+        if ($progress) {
+            // If the lesson is already marked as complete, do nothing
+            return (array) $progress;
+        }
 
-            // If no progress record exists, assume 0 completed lessons
-            if (!$progress) {
+        // Create a new progress record
+        DB::insert("
+            INSERT INTO progress (user_id, course_id, lesson_id, completed_lessons, created_at, updated_at)
+            VALUES (?, ?, ?, 1, NOW(), NOW())
+        ", [$userId, $courseId, $lessonId]);
+
+        // Fetch the newly created progress record
+        $newProgress = DB::selectOne("
+            SELECT * FROM progress
+            WHERE user_id = ? AND course_id = ? AND lesson_id = ?
+        ", [$userId, $courseId, $lessonId]);
+
+        return (array) $newProgress;
+    }
+
+
+    public function markLessonAsIncomplete($userId, $courseId, $lessonId)
+    {
+        // Delete the progress record if it exists
+        $deleted = DB::delete("
+            DELETE FROM progress
+            WHERE user_id = ? AND course_id = ? AND lesson_id = ?
+        ", [$userId, $courseId, $lessonId]);
+
+        return $deleted > 0;
+    }
+
+
+    public function getUserProgressForCourse($userId, $courseId)
+    {
+        // Get all completed lessons for the user in the course
+        $completedLessons = DB::select("
+            SELECT lesson_id FROM progress
+            WHERE user_id = ? AND course_id = ?
+        ", [$userId, $courseId]);
+
+        $completedLessonIds = array_map(function ($item) {
+            return $item->lesson_id;
+        }, $completedLessons);
+
+        // Get all lessons in the course
+        $lessons = DB::select("
+            SELECT lesson_id, title, description FROM lessons
+            WHERE course_id = ?
+        ", [$courseId]);
+
+        // Prepare the response
+        $progress = [
+            'completed_lessons' => $completedLessonIds,
+            'total_lessons' => count($lessons),
+            'lessons' => array_map(function ($lesson) use ($completedLessonIds) {
                 return [
-                    'completed_lessons' => 0,
-                    'total_lessons' => $totalLessons,
+                    'lesson_id' => $lesson->lesson_id, // Use lesson_id instead of id
+                    'title' => $lesson->title,
+                    'description' => $lesson->description,
+                    'is_completed' => in_array($lesson->lesson_id, $completedLessonIds), // Use lesson_id instead of id
                 ];
-            }
+            }, $lessons),
+        ];
 
-            return [
-                'completed_lessons' => $progress->completed_lessons,
-                'total_lessons' => $totalLessons,
-            ];
-        } catch (Exception $e) {
-            throw new Exception('Error fetching progress: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Update the progress when a lesson is completed.
-     *
-     * @param int $courseId
-     * @param int $userId
-     * @return array
-     * @throws Exception
-     */
-    public function updateProgress(int $courseId, int $userId)
-    {
-        try {
-            // Check if a progress record already exists
-            $progress = DB::table('progress')
-                ->where('user_id', $userId)
-                ->where('course_id', $courseId)
-                ->first();
-
-            if ($progress) {
-                // Update the existing progress record
-                DB::table('progress')
-                    ->where('user_id', $userId)
-                    ->where('course_id', $courseId)
-                    ->increment('completed_lessons');
-            } else {
-                // Create a new progress record
-                DB::table('progress')->insert([
-                    'user_id' => $userId,
-                    'course_id' => $courseId,
-                    'completed_lessons' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-
-            // Fetch the updated progress
-            return $this->getProgress($courseId, $userId);
-        } catch (Exception $e) {
-            throw new Exception('Error updating progress: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Decrement the progress when a lesson is marked as incomplete.
-     *
-     * @param int $courseId
-     * @param int $userId
-     * @return array
-     * @throws Exception
-     */
-    public function decrementProgress(int $courseId, int $userId)
-    {
-        try {
-            // Check if a progress record exists and has completed lessons
-            $progress = DB::table('progress')
-                ->where('user_id', $userId)
-                ->where('course_id', $courseId)
-                ->first();
-
-            if ($progress && $progress->completed_lessons > 0) {
-                // Decrement the completed lessons count
-                DB::table('progress')
-                    ->where('user_id', $userId)
-                    ->where('course_id', $courseId)
-                    ->decrement('completed_lessons');
-            } else {
-                throw new Exception('No progress to decrement');
-            }
-
-            // Fetch the updated progress
-            return $this->getProgress($courseId, $userId);
-        } catch (Exception $e) {
-            throw new Exception('Error decrementing progress: ' . $e->getMessage());
-        }
+        return $progress;
     }
 }

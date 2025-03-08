@@ -2,12 +2,79 @@ import api from "./api";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
-/**
- * Fetch the progress for a specific course.
- * @param {string} courseId - The ID of the course.
- * @returns {Promise} - A promise that resolves to the progress data.
- */
-export const getProgress = async (courseId) => {
+export const markLessonAsComplete = async (courseId, lessonId) => {
+  try {
+    const token = Cookies.get("access_token");
+
+    if (!token) {
+      toast.error("User is not authenticated!");
+      throw new Error("Access token not found");
+    }
+
+    const response = await api.post(
+      `/courses/${courseId}/lessons/${lessonId}/complete`,
+      {
+        course_id: courseId,
+        lesson_id: lessonId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    //console.log("API Response (markLessonAsComplete):", response.data);
+    // toast.success("Lesson marked as complete!");
+
+    return response.data;
+  } catch (error) {
+    console.error("Mark Lesson as Complete Error:", error);
+    toast.error(
+      error.response?.data?.error || "Failed to mark lesson as complete!"
+    );
+    throw error;
+  }
+};
+
+export const markLessonAsIncomplete = async (courseId, lessonId) => {
+  try {
+    const token = Cookies.get("access_token");
+
+    if (!token) {
+      toast.error("User is not authenticated!");
+      throw new Error("Access token not found");
+    }
+
+    const response = await api.post(
+      `/courses/${courseId}/lessons/${lessonId}/incomplete`,
+      {
+        course_id: courseId,
+        lesson_id: lessonId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    //console.log("API Response (markLessonAsIncomplete):", response.data);
+    // toast.success("Lesson marked as incomplete!");
+
+    return true;
+  } catch (error) {
+    console.error("Mark Lesson as Incomplete Error:", error);
+    toast.error(
+      error.response?.data?.error || "Failed to mark lesson as incomplete!"
+    );
+    throw error;
+  }
+};
+
+export const getUserProgressForCourse = async (courseId) => {
   try {
     const token = Cookies.get("access_token");
 
@@ -22,73 +89,11 @@ export const getProgress = async (courseId) => {
       },
     });
 
+    console.log("API Response (getUserProgressForCourse):", response.data);
     return response.data;
   } catch (error) {
+    console.error("Get User Progress Error:", error);
     toast.error(error.response?.data?.error || "Failed to fetch progress!");
-    throw error;
-  }
-};
-
-/**
- * Update the progress for a specific course.
- * @param {string} courseId - The ID of the course.
- * @returns {Promise} - A promise that resolves to the updated progress data.
- */
-export const updateProgress = async (courseId) => {
-  try {
-    const token = Cookies.get("access_token");
-
-    if (!token) {
-      toast.error("User is not authenticated!");
-      throw new Error("Access token not found");
-    }
-
-    const response = await api.post(
-      `/courses/${courseId}/progress`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    toast.success("Progress updated successfully!");
-    return response.data;
-  } catch (error) {
-    toast.error(error.response?.data?.error || "Failed to update progress!");
-    throw error;
-  }
-};
-
-/**
- * Decrement the progress for a specific course.
- * @param {string} courseId - The ID of the course.
- * @returns {Promise} - A promise that resolves to the decremented progress data.
- */
-export const decrementProgress = async (courseId) => {
-  try {
-    const token = Cookies.get("access_token");
-
-    if (!token) {
-      toast.error("User is not authenticated!");
-      throw new Error("Access token not found");
-    }
-
-    const response = await api.post(
-      `/courses/${courseId}/progress/decrement`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    toast.success("Progress decremented successfully!");
-    return response.data;
-  } catch (error) {
-    toast.error(error.response?.data?.error || "Failed to decrement progress!");
     throw error;
   }
 };
