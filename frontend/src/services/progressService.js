@@ -89,7 +89,7 @@ export const getUserProgressForCourse = async (courseId) => {
       },
     });
 
-    console.log("API Response (getUserProgressForCourse):", response.data);
+    //console.log("API Response (getUserProgressForCourse):", response.data);
     return response.data;
   } catch (error) {
     console.error("Get User Progress Error:", error);
