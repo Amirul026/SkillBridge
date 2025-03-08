@@ -70,9 +70,6 @@ Route::middleware(['auth.jwt'])->group(function () {
     // Quiz routes
     Route::get('/quiz/questions', [QuizController::class, 'getQuizQuestions']);
 
-    
-
-
     // Submit quiz answers
     Route::post('/quiz/submit', [QuizController::class, 'submitQuizAnswers']);
 
