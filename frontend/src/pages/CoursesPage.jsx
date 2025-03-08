@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   Search,
@@ -10,6 +11,10 @@ import {
 } from "lucide-react";
 import { getCourses } from "../services/courseService";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+
+import LiveSessionsPage from '../components/LiveSessionsPage'; // Adjust the path as needed
+import { Link } from 'react-router-dom'; // Import Link
+
 
 const categories = [
   "All",
@@ -281,8 +286,8 @@ const CoursesPage = ({ isDarkMode }) => {
           Showing {paginatedCourses.length} of {filteredCourses.length} courses
         </p>
 
-        {/* Courses Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
           {isLoading
             ? Array(8)
                 .fill(0)
@@ -404,21 +409,21 @@ const CoursesPage = ({ isDarkMode }) => {
                         >
                           View Lessons
                         </button>
-                        <button
-                          className={`px-4 py-2 rounded-lg ${
-                            isDarkMode
-                              ? "bg-white text-gray-900"
-                              : "bg-[#1e1a53] text-white"
-                          } hover:opacity-90 transition-opacity`}
-                        >
-                          Enroll Now
-                        </button>
+              <Link // Link only on the button
+                key={course.id}
+                to={`/course/${course.course_id}`}
+                className={`px-4 py-2 rounded-lg ${isDarkMode ? 'bg-white text-gray-900' : 'bg-[#1e1a53] text-white'} hover:opacity-90 transition-opacity no-underline`}
+              >
+                Join Meeting
+              </Link>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
-        </div>
+ 
+
+</div>
 
         {/* Pagination */}
         {!isLoading && totalPages > 1 && (

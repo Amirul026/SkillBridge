@@ -198,4 +198,11 @@ class AuthService
             return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
         }
     }
+
+
+    public function getEnrolledCourses(User $user)
+    {
+        $courses = $user->courses()->get(); // Assuming you have a many-to-many relationship
+        return $courses;
+    }
 }

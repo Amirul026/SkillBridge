@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,6 +16,8 @@ import {
   Trash,
   Edit,
 } from "lucide-react";
+import { Link } from 'react-router-dom'; // Import Link
+
 
 const MentorCoursesPage = ({ isDarkMode }) => {
   const [courses, setCourses] = useState([]);
@@ -25,8 +28,10 @@ const MentorCoursesPage = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const data = await getCourses(true); // Fetch mentor courses
-        setCourses(data); // Assuming the backend now returns an array of courses.
+
+        const data = await getCourses(true);
+        setCourses(data);
+
       } catch (error) {
         toast.error("Failed to fetch courses!");
       } finally {
@@ -119,10 +124,15 @@ const MentorCoursesPage = ({ isDarkMode }) => {
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {loading
-            ? Array(4)
-                .fill(0)
-                .map((_, index) => <LoadingSkeleton key={index} />)
-            : courses.map((course) => (
+
+            ? Array(4).fill(0).map((_, index) => <LoadingSkeleton key={index} />)
+            : courses.map(course => (
+              <Link 
+                  key={course.course_id} 
+                  to={`/course/${course.course_id}`} 
+                  className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md hover:shadow-lg transition-shadow no-underline`} // Add Link and no-underline class
+                > 
+
                 <div
                   key={course.course_id}
                   className={`rounded-lg overflow-hidden ${
@@ -260,6 +270,7 @@ const MentorCoursesPage = ({ isDarkMode }) => {
                     </div>
                   </div>
                 </div>
+                </Link>
               ))}
         </div>
       </div>

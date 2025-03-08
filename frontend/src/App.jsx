@@ -26,6 +26,8 @@ import MentorLesson from "./pages/MentorLesson";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isAuthenticated } from "./services/authService";
+import CoursePage from './components/CoursePage';
+
 
 const App = () => {
   return (
@@ -176,6 +178,17 @@ const App = () => {
                 element={
                   isAuthenticated() ? (
                     <QuizPage isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              {/* New Route for CoursePage */}
+              <Route
+                path="/course/:courseId"
+                element={
+                  isAuthenticated() ? (
+                    <CoursePage isDarkMode={isDarkMode} />
                   ) : (
                     <Navigate to="/login" />
                   )

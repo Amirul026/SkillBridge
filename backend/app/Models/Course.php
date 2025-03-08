@@ -40,11 +40,13 @@ class Course extends Model
     /**
      * Relationship: Reviews (Associated with this course)
      */
+
     /*     public function reviews()
         {
             return $this->hasMany(Review::class, 'course_id', 'course_id');
         }
      */
+
     /**
      * Relationship: Lessons (Associated with this course)
      */
@@ -69,8 +71,17 @@ class Course extends Model
         return $query->where('is_paywalled', true);
     }
 
+
     public function progress()
     {
         return $this->hasMany(Progress::class);
+    }
+
+
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'course_user', 'course_id', 'user_id');
+
     }
 }
