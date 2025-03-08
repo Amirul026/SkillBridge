@@ -84,7 +84,7 @@ const MentorLesson = () => {
 
   // Navigate to create new lesson
   const handleAddLesson = () => {
-    navigate(`/courses/${courseId}/lessons/create`);
+    navigate(`/create-lesson`);
   };
 
   if (loading) {

@@ -127,18 +127,10 @@ const MentorCoursesPage = ({ isDarkMode }) => {
 
             ? Array(4).fill(0).map((_, index) => <LoadingSkeleton key={index} />)
             : courses.map(course => (
-              <Link 
-                  key={course.course_id} 
-                  to={`/course/${course.course_id}`} 
-                  className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md hover:shadow-lg transition-shadow no-underline`} // Add Link and no-underline class
-                > 
+
 
                 <div
-                  key={course.course_id}
-                  className={`rounded-lg overflow-hidden ${
-                    isDarkMode ? "bg-gray-800" : "bg-white"
-                  } shadow-md hover:shadow-lg transition-shadow cursor-pointer`} // Add cursor-pointer
-                  onClick={() => handleCourseClick(course.course_id)} // Add onClick handler
+                  
                 >
                   {course.picture && (
                     <img
@@ -266,11 +258,30 @@ const MentorCoursesPage = ({ isDarkMode }) => {
                         >
                           <Edit size={16} />
                         </button>
+                        <Link // Link only on the button
+                            key={course.id}
+                            to={`/course/${course.course_id}`}
+                            className={`px-4 py-2 rounded-lg ${isDarkMode ? 'bg-white text-gray-900' : 'bg-[#1e1a53] text-white'} hover:opacity-90 transition-opacity no-underline`}
+                             >
+                                        GO LIVE
+                          </Link>
+
+                          <button
+                             onClick={(e) => {
+                             e.stopPropagation();
+                              handleCourseClick(course.course_id);
+                             }}
+                             className={`px-4 py-2 rounded-lg ${
+                            isDarkMode ? "bg-white text-gray-900" : "bg-[#1e1a53] text-white"
+                             } hover:opacity-90 transition-opacity`}
+                        >
+                                    Lessons
+                         </button>
                       </div>
                     </div>
                   </div>
                 </div>
-                </Link>
+             
               ))}
         </div>
       </div>
