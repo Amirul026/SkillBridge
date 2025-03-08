@@ -44,13 +44,10 @@ class LessonController extends Controller
 
         $courseId = $request->input('course_id');
         $course = Course::findOrFail($courseId);
-        //$m_id = $this->getUserIdFromToken($request->header('Authorization'));
 
         if ($course->mentor_id !== $this->getUserIdFromToken($request->header('Authorization'))) {
             return response()->json([
                 'error' => 'Unauthorized: Only the course creator can add lessons',
-                //'course-id' => $courseId,
-                //'mentor-id' => $m_id,
             ], 403);
         }
 
