@@ -83,3 +83,9 @@ Route::get('/meetings/{meeting}', [MeetingController::class, 'show']);
 
 //enroll user
 Route::get('/users/enrolled-courses', [AuthController::class, 'getEnrolledCourses']);
+
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
