@@ -6,6 +6,7 @@ import {
   ChevronDown,
   LogOut,
   User,
+  Menu,
 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { getProfile, logout, isAuthenticated } from "../services/authService";
@@ -83,6 +84,7 @@ const Layout = ({ children }) => {
       <button
         onClick={() => setIsProfileOpen(!isProfileOpen)}
         className="flex items-center space-x-3 focus:outline-none"
+        style={{ backgroundColor: isDarkMode ? "#333" : "#f9f9f9" }}
       >
         <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-200">
           <img
@@ -93,13 +95,13 @@ const Layout = ({ children }) => {
         </div>
         <span
           className={`font-medium ${
-            isDarkMode ? "text-white" : "text-gray-900"
+            isDarkMode ? "text-gray-100" : "text-gray-800"
           }`}
         >
           {user?.name}
         </span>
         <ChevronDown
-          className={`w-4 h-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+          className={`w-4 h-4 ${isDarkMode ? "text-gray-100" : "text-gray-800"}`}
         />
       </button>
 
@@ -169,21 +171,11 @@ const Layout = ({ children }) => {
               className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <svg
+              <Menu
                 className={`w-6 h-6 ${
                   isDarkMode ? "text-white" : "text-gray-900"
                 }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              />
             </button>
 
             {/* Desktop Menu */}
@@ -313,13 +305,22 @@ const Layout = ({ children }) => {
                 </button>
                 {isAuthenticated() ? (
                   <div className="flex flex-col space-y-2">
-                    <div className="flex items-center space-x-2">
+                    <div
+                      className="flex items-center space-x-2"
+                      style={{ backgroundColor: isDarkMode ? "#333" : "#f9f9f9" }}
+                    >
                       <img
                         src={user?.picture || "/api/placeholder/32/32"}
                         alt="Profile"
                         className="w-8 h-8 rounded-full"
                       />
-                      <span>{user?.name}</span>
+                      <span
+                        className={`${
+                          isDarkMode ? "text-gray-100" : "text-gray-800"
+                        }`}
+                      >
+                        {user?.name}
+                      </span>
                     </div>
                     <button
                       onClick={() => {
