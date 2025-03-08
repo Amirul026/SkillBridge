@@ -18,136 +18,109 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|string|email|max:255|unique:users',
-            'password'      => 'required|string|min:6',
-            'phone'         => 'required|string|unique:users',
-            //'picture_file'  => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role'          => 'required|string|in:Admin,Mentor,Learner',
-            'can_host'      => 'nullable|boolean',
+        $validatedData = $this->validateRequest($request, [
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'phone'    => 'required|string|unique:users',
+            'role'     => 'required|string|in:Admin,Mentor,Learner',
+            'can_host' => 'nullable|boolean',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        return $this->authService->register($request->all());
+        return $validatedData instanceof \Illuminate\Http\JsonResponse
+            ? $validatedData
+            : $this->authService->register($validatedData);
     }
 
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string'
+        $validatedData = $this->validateRequest($request, [
+            'email'    => 'required|string|email',
+            'password' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        return $this->authService->login($request->all());
+        return $validatedData instanceof \Illuminate\Http\JsonResponse
+            ? $validatedData
+            : $this->authService->login($validatedData);
     }
 
     public function refreshToken(Request $request)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
-        }
-
-        return $this->authService->refreshToken($request->header('Authorization'));
+        $token = $this->extractToken($request);
+        return $token instanceof \Illuminate\Http\JsonResponse
+            ? $token
+            : $this->authService->refreshToken($token);
     }
 
     public function logout(Request $request)
     {
-        // Retrieve the authenticated user from the request
-        $user = $request->attributes->get('user');
-
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-
-        // Call the authService to perform the logout
-        return $this->authService->logout($request->header('Authorization'));
+        $user = $this->getAuthenticatedUser($request);
+        return $user instanceof \Illuminate\Http\JsonResponse
+            ? $user
+            : $this->authService->logout($request->header('Authorization'));
     }
 
     public function getProfile(Request $request)
     {
-        // Retrieve the authenticated user from the request
-        $user = $request->attributes->get('user');
-
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-
-        // Call the authService to get the profile data
-        return $this->authService->getProfile($user);
+        $user = $this->getAuthenticatedUser($request);
+        return $user instanceof \Illuminate\Http\JsonResponse
+            ? $user
+            : $this->authService->getProfile($user);
     }
-
 
     public function updateProfile(Request $request)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
-            return response()->json(['error' => 'Token required'], 401);
-        }
-        $userId = $this->getUserIdFromToken($request->header('Authorization'));
-        if (!$userId) {
-            return response()->json(['error' => 'Invalid token'], 403);
-        }
-        // Retrieve the authenticated user from the request
-        $user = $request->attributes->get('user');
+        $user = $this->getAuthenticatedUser($request);
+        if ($user instanceof \Illuminate\Http\JsonResponse) return $user;
 
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
-            'phone' => 'sometimes|required|string|unique:users,phone,' . $user->user_id . ',user_id',
-            'picture' => 'nullable|url',
+        $validatedData = $this->validateRequest($request, [
+            'name'     => 'sometimes|required|string|max:255',
+            'email'    => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
+            'phone'    => 'sometimes|required|string|unique:users,phone,' . $user->user_id . ',user_id',
+            'picture'  => 'nullable|url',
             'password' => 'nullable|string|min:6',
-            'role' => 'sometimes|required|string|in:Admin,Mentor,Learner',
+            'role'     => 'sometimes|required|string|in:Admin,Mentor,Learner',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        // Call the authService to update the profile
-        return $this->authService->updateProfile($user, $request->all());
-    }
-
-
-    /**
-     * Extract user ID from the token
-     *
-     * @param string $tokenString
-     * @return mixed
-     */
-    private function getUserIdFromToken($tokenString)
-    {
-        try {
-            $parser = new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder());
-            $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
-            return $token->claims()->get('uid');
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $validatedData instanceof \Illuminate\Http\JsonResponse
+            ? $validatedData
+            : $this->authService->updateProfile($user, $validatedData);
     }
 
     public function getEnrolledCourses(Request $request)
     {
-        // Retrieve the authenticated user from the request
+        $user = $this->getAuthenticatedUser($request);
+        return $user instanceof \Illuminate\Http\JsonResponse
+            ? $user
+            : response()->json($this->authService->getEnrolledCourses($user));
+    }
+
+    /**
+     * Validate request data and return errors if validation fails.
+     */
+    private function validateRequest(Request $request, array $rules)
+    {
+        $validator = Validator::make($request->all(), $rules);
+        return $validator->fails() ? response()->json($validator->errors(), 422) : $validator->validated();
+    }
+
+    /**
+     * Extract token from request and validate format.
+     */
+    private function extractToken(Request $request)
+    {
+        $token = $request->header('Authorization');
+        return (!$token || !str_starts_with($token, 'Bearer '))
+            ? response()->json(['error' => 'Token required'], 401)
+            : str_replace('Bearer ', '', $token);
+    }
+
+    /**
+     * Retrieve the authenticated user from request attributes.
+     */
+    private function getAuthenticatedUser(Request $request)
+    {
         $user = $request->attributes->get('user');
-
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-
-        // Call the authService to get the enrolled courses
-        $courses = $this->authService->getEnrolledCourses($user); // Check this line
-        return response()->json($courses);
+        return $user ?: response()->json(['error' => 'User not found'], 404);
     }
 }
