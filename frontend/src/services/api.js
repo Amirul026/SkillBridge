@@ -9,7 +9,7 @@ const api = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
-});
+}); 
 
 // Add a request interceptor to add the Authorization header
 api.interceptors.request.use(
