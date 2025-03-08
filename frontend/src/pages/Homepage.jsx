@@ -1,7 +1,7 @@
 import { Star, Search } from 'lucide-react';
 import S1 from "../assets/images/s1.png";
-import S2 from "../assets/images/S2.png";
-import S3 from "../assets/images/S3.png";
+import S2 from "../assets/images/s2.png";
+import S3 from "../assets/images/s3.png";
 import T1 from "../assets/images/t1.png";
 import T2 from "../assets/images/t2.png";
 import T3 from "../assets/images/t3.png";

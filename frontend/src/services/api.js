@@ -12,7 +12,7 @@ const api = axios.create({
 });
 
 // Add a request interceptor to add the Authorization header
-api.interceptors.request.use(
+/* api.interceptors.request.use(
   (config) => {
     const accessToken = Cookies.get("access_token");
     if (accessToken) {
@@ -43,5 +43,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
+ */
 export default api;

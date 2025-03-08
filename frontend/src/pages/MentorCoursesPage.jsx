@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getCourses, deleteCourse, updateCourse } from '../services/courseService';
 import { toast } from 'react-toastify';
 import { BookOpen, Star, Clock, Users, Loader2, Trash, Edit } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link
 
 const MentorCoursesPage = ({ isDarkMode }) => {
   const [courses, setCourses] = useState([]);
@@ -11,8 +12,8 @@ const MentorCoursesPage = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const data = await getCourses(true); // Fetch mentor courses
-        setCourses(data); //assuming the backend now returns an array of courses.
+        const data = await getCourses(true);
+        setCourses(data);
       } catch (error) {
         toast.error("Failed to fetch courses!");
       } finally {
@@ -22,7 +23,6 @@ const MentorCoursesPage = ({ isDarkMode }) => {
 
     fetchCourses();
   }, []);
-
 
   const handleDeleteCourse = async (courseId) => {
     try {
@@ -88,6 +88,11 @@ const MentorCoursesPage = ({ isDarkMode }) => {
           {loading
             ? Array(4).fill(0).map((_, index) => <LoadingSkeleton key={index} />)
             : courses.map(course => (
+              <Link 
+                  key={course.course_id} 
+                  to={`/course/${course.course_id}`} 
+                  className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md hover:shadow-lg transition-shadow no-underline`} // Add Link and no-underline class
+                > 
                 <div
                   key={course.course_id}
                   className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-md hover:shadow-lg transition-shadow`}
@@ -159,6 +164,7 @@ const MentorCoursesPage = ({ isDarkMode }) => {
                     </div>
                   </div>
                 </div>
+                </Link>
               ))}
         </div>
       </div>

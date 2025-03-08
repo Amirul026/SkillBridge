@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -8,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Exception;
+
 class LessonController extends Controller
 {
     protected $lessonService;
@@ -44,13 +46,10 @@ class LessonController extends Controller
 
         $courseId = $request->input('course_id');
         $course = Course::findOrFail($courseId);
-        //$m_id = $this->getUserIdFromToken($request->header('Authorization'));
 
         if ($course->mentor_id !== $this->getUserIdFromToken($request->header('Authorization'))) {
             return response()->json([
                 'error' => 'Unauthorized: Only the course creator can add lessons',
-                //'course-id' => $courseId,
-                //'mentor-id' => $m_id,
             ], 403);
         }
 
