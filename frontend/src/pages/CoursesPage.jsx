@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   Search,
@@ -10,11 +9,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { getCourses } from "../services/courseService";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-
-import LiveSessionsPage from '../components/LiveSessionsPage'; // Adjust the path as needed
-import { Link } from 'react-router-dom'; // Import Link
-
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   "All",
@@ -45,7 +40,7 @@ const CoursesPage = ({ isDarkMode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [coursesData, setCoursesData] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -66,8 +61,6 @@ const CoursesPage = ({ isDarkMode }) => {
   const filteredCourses = coursesData.filter((course) => {
     return true;
   });
-
-  //console.log("Filtered Courses:", filteredCourses);
 
   // Sort courses
   const sortedCourses = [...filteredCourses].sort((a, b) => {
@@ -287,7 +280,6 @@ const CoursesPage = ({ isDarkMode }) => {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-
           {isLoading
             ? Array(8)
                 .fill(0)
@@ -396,34 +388,21 @@ const CoursesPage = ({ isDarkMode }) => {
                       >
                         ${course.price}
                       </span>
-                      <div className="flex gap-2">
-                        <button
-                          className={`px-4 py-2 rounded-lg ${
-                            isDarkMode
-                              ? "bg-white text-gray-900"
-                              : "bg-[#1e1a53] text-white"
-                          } hover:opacity-90 transition-opacity`}
-                          onClick={() =>
-                            navigate(`/courses/${course.course_id}/lessons`)
-                          }
-                        >
-                          View Lessons
-                        </button>
-              <Link // Link only on the button
-                key={course.id}
-                to={`/course/${course.course_id}`}
-                className={`px-4 py-2 rounded-lg ${isDarkMode ? 'bg-white text-gray-900' : 'bg-[#1e1a53] text-white'} hover:opacity-90 transition-opacity no-underline`}
-              >
-                Join Meeting
-              </Link>
-                      </div>
+                      <button
+                        className={`px-4 py-2 rounded-lg ${
+                          isDarkMode
+                            ? "bg-white text-gray-900"
+                            : "bg-[#1e1a53] text-white"
+                        } hover:opacity-90 transition-opacity`}
+                        onClick={() => navigate(`/course-details/${course.course_id}`)}
+                      >
+                        Enroll Now
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
- 
-
-</div>
+        </div>
 
         {/* Pagination */}
         {!isLoading && totalPages > 1 && (
