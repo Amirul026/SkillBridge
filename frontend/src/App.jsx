@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,6 +11,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import CoursesPage from "./pages/CoursesPage";
+import CourseDetailsPage from "./pages/CourseDetailsPage"; // Ensure this path is correct
 import Profile from "./pages/Profile";
 import MentorDashboard from "./pages/MentorDashboard";
 import LearnerDashboard from "./pages/LearnerDashboard";
@@ -18,7 +20,7 @@ import MentorCoursesPage from "./pages/MentorCoursesPage";
 import ChatPage from "./pages/ChatPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import IndividualCoursePage from "./pages/IndividualCoursePage";
-import QuizPage from "./pages/QuizPage"; // Import the QuizPage
+import QuizPage from "./pages/QuizPage";
 import CreateLesson from "./pages/CreateLesson";
 import LessonPage from "./pages/LessonPage";
 import LearnerLessonView from "./pages/LeranerLessonView";
@@ -26,7 +28,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isAuthenticated } from "./services/authService";
 import CoursePage from './components/CoursePage';
-
 
 const App = () => {
   return (
@@ -54,6 +55,10 @@ const App = () => {
               <Route
                 path="/courses"
                 element={<CoursesPage isDarkMode={isDarkMode} />}
+              />
+              <Route
+                path="/course-details/:courseId"
+                element={<CourseDetailsPage isDarkMode={isDarkMode} />}
               />
               <Route path="/seminar" element={<div>Seminar Page</div>} />
               <Route path="/help" element={<div>Help Center</div>} />
@@ -182,7 +187,6 @@ const App = () => {
                   )
                 }
               />
-              {/* New Route for CoursePage */}
               <Route
                 path="/course/:courseId"
                 element={
@@ -193,8 +197,6 @@ const App = () => {
                   )
                 }
               />
-
-              {/* New Routes for Lessons */}
               <Route
                 path="/courses/:courseId/lessons"
                 element={
