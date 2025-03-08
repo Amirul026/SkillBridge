@@ -55,10 +55,6 @@ jobs:
           npm install
           npm run build
 
-      - name: Start MySQL Service
-        run: |
-          sudo service mysql start
-
       - name: Run Laravel Migrations
         run: |
           cd backend
