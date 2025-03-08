@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,8 +17,6 @@ import MentorDashboard from "./pages/MentorDashboard";
 import LearnerDashboard from "./pages/LearnerDashboard";
 import CreateCourse from "./pages/CreateCourse";
 import MentorCoursesPage from "./pages/MentorCoursesPage";
-import ChatPage from "./pages/ChatPage";
-import LeaderboardPage from "./pages/LeaderboardPage";
 import IndividualCoursePage from "./pages/IndividualCoursePage";
 import QuizPage from "./pages/QuizPage";
 import CreateLesson from "./pages/CreateLesson";
@@ -143,26 +141,6 @@ const App = () => {
                   isAuthenticated() &&
                   localStorage.getItem("userRole") === "Mentor" ? (
                     <MentorCoursesPage isDarkMode={isDarkMode} />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/chat"
-                element={
-                  isAuthenticated() ? (
-                    <ChatPage isDarkMode={isDarkMode} />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/leaderboard"
-                element={
-                  isAuthenticated() ? (
-                    <LeaderboardPage isDarkMode={isDarkMode} />
                   ) : (
                     <Navigate to="/login" />
                   )
