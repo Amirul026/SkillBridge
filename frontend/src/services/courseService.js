@@ -1,7 +1,7 @@
 import api from "./api";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
-import axios from 'axios';
+//import axios from 'axios';
 
 // Create a new course
 export const createCourse = async (courseData) => {
@@ -48,9 +48,6 @@ export const deleteCourse = async (courseId) => {
   }
 };
 
-
-
-
 // Get all courses, or get courses for a mentor
 export const getCourses = async (mentor = false) => {
   try {
@@ -63,7 +60,7 @@ export const getCourses = async (mentor = false) => {
       headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
     });
 
-    console.log("API Response (getCourses):", response.data); // Add this line
+    // console.log("API Response (getCourses):", response.data); // Add this line
     return response.data;
   } catch (error) {
     toast.error(error.response?.data?.error || "Failed to fetch courses!");
@@ -71,17 +68,3 @@ export const getCourses = async (mentor = false) => {
   }
 };
 
-
-export const getEnrolledCourses = async () => {
-  const token = getAuthToken();
-  const response = await fetch(`/api/users/enrolled-courses`, {
-      headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-      },
-  });
-  if (!response.ok) {
-      throw new Error('Failed to fetch enrolled courses');
-  }
-  return response.json();
-};

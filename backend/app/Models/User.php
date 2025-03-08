@@ -15,12 +15,24 @@ class User extends Authenticatable
     protected $primaryKey = 'user_id';
 
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'picture', 'role', 'can_host'
+        'name',
+        'email',
+        'password',
+        'phone',
+        'picture',
+        'role',
+        'can_host'
     ];
 
     protected $hidden = ['password'];
 
     public $timestamps = true;
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
+
 
 
     /**
@@ -29,5 +41,6 @@ class User extends Authenticatable
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id');
+
     }
 }
