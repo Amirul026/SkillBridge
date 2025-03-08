@@ -22,6 +22,7 @@ import QuizPage from "./pages/QuizPage"; // Import the QuizPage
 import CreateLesson from "./pages/CreateLesson";
 import LessonPage from "./pages/LessonPage";
 import LearnerLessonView from "./pages/LeranerLessonView";
+import MentorLesson from "./pages/MentorLesson";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isAuthenticated } from "./services/authService";
@@ -210,6 +211,16 @@ const App = () => {
                 element={
                   isAuthenticated() ? (
                     <LearnerLessonView isDarkMode={isDarkMode} />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/courses/:courseId/MentorLessons"
+                element={
+                  isAuthenticated() ? (
+                    <MentorLesson isDarkMode={isDarkMode} />
                   ) : (
                     <Navigate to="/login" />
                   )
