@@ -67,3 +67,4 @@ export const getCourses = async (mentor = false) => {
     throw error;
   }
 };
+

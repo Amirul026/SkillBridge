@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -166,7 +167,7 @@ class CourseController extends Controller
     //     }
     // }
 
-        /**
+    /**
      * Get all courses.
      */
     public function index()
@@ -191,13 +192,13 @@ class CourseController extends Controller
     public function getCoursesByMentor(Request $request)
     {
         $user = $request->attributes->get('user');
-    
+
         Log::info('CourseController: User object: ' . json_encode($user));
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
-    
+
         $mentorId = $user->user_id;
         $courses = $this->courseService->getCoursesByMentorId($mentorId);
         return response()->json($courses);

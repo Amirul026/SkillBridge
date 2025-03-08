@@ -11,6 +11,9 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ProgressController;
 
+use App\Http\Controllers\MeetingController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -57,15 +60,32 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/lessons/course/{courseId}', [LessonController::class, 'getLessonsByCourse']);
     Route::get('/lessons/{lessonId}', [LessonController::class, 'getLessonById']);
 
+
     // Progress routes
     Route::post('/courses/{courseId}/lessons/{lessonId}/complete', [ProgressController::class, 'markLessonAsComplete']);
     Route::post('/courses/{courseId}/lessons/{lessonId}/incomplete', [ProgressController::class, 'markLessonAsIncomplete']);
     Route::get('/courses/{courseId}/progress', [ProgressController::class, 'getUserProgressForCourse']);
 
+
     // Quiz routes
     Route::get('/quiz/questions', [QuizController::class, 'getQuizQuestions']);
+
+    
+
+
+    // Submit quiz answers
     Route::post('/quiz/submit', [QuizController::class, 'submitQuizAnswers']);
+
+
 });
 
 // Upload route
 Route::post('/upload', [UploadController::class, 'upload']);
+
+//meeting management
+Route::post('/meetings', [MeetingController::class, 'store']);
+Route::get('/meetings/{meeting}', [MeetingController::class, 'show']);
+
+
+//enroll user
+Route::get('/users/enrolled-courses', [AuthController::class, 'getEnrolledCourses']);
