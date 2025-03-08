@@ -40,13 +40,14 @@ SkillBridge is designed to connect university alumni and students to facilitate 
 #### Backend:
 - Laravel (PHP Framework)  
 #### Frontend:
-- React.js (JavaScript Library)  
+- React.js (JavaScript Library)
+- Vite (Build Tool)
 #### Rendering Method:
 - Client-Side Rendering (CSR)
 #### Database:
-- Microsoft SQL Server
-#### Environment:
-- Docker for containerized deployment
+- MySQL
+- phpMyAdmin (Database Management Tool)
+
 
 ---
 
@@ -57,14 +58,14 @@ SkillBridge is designed to connect university alumni and students to facilitate 
 - PHP >= 8.0.30
 - Composer
 - Node.js
-- Microsoft SQL Server
+- MySQL
 
 <details>
 <summary>Backend (Laravel)</summary>
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/srijon57/CareCritique.git
+    git clone https://github.com/Amirul026/SkillBridge.git
     ```
 
 2. Install dependencies:
@@ -121,77 +122,51 @@ A mock user interface has been designed using Figma. The design includes:
 1.  **User Authentication**
     
     -   Secure registration and login for mentors and learners.
-    -   Role-based access (Admin, Mentor, Learner).
+    -   Role-based access (Mentor, Learner).
 2.  **Course and Video Management**
     
     -   Mentors can upload and manage courses and videos.
-    -   Some videos can be placed behind a paywall.
+      
 3.  **Live Classes and Broadcasting**
     
-    -   Mentors can host live classes and broadcast sessions.
+    -   Mentors can host live classes.
     -   Learners can join live classes and interact.
-4.  **Class Purchase System**
-    
-    -   Learners can purchase access to courses and classes.
-    -   Track user purchases and access to premium content.
-5.  **Interactive Calendar**
-    
-    -   Learners and mentors can schedule classes, events, and live sessions.
-    -   Google Calendar integration for syncing schedules.
-6.  **Video Call Sessions**
+
+4.  **Video Call Sessions**
     
     -   Schedule one-on-one or group video call sessions for direct learning.
     -   Integration of video conferencing tools for seamless interaction.
-7.  **Real-Time Chat**
+
+5.  **Mentor Dashboard**
     
-    -   In-platform chat for mentors and learners to communicate.
-    -   File-sharing capabilities for sharing resources.
-8.  **Learner Points System**
+    -   Manage courses, lessons and content.
     
-    -   Learners earn points based on courses completed and site activity.
-    -   Redeem points for prizes or learning opportunities.
-9.  **Admin Dashboard**
-    
-    -   Manage users, courses, payments, and content.
-    -   Review user feedback, ratings, and course performance.
-### 🔗 API Endpoints:
-| Method | Endpoint                  | Description                               |
-|--------|---------------------------|-------------------------------------                            |
-| GET    | /courses                  | Fetch all courses.                        |
-| GET    | /courses/{id}             | Fetch a specific course's details.        |
-| POST   | /courses                  | Create a new course (Mentor only).        |
-| PUT    | /courses/{id}             | Update a course (Mentor only).            |
-| DELETE | /courses/{id}             | Delete a course (Mentor only).            |
-| GET    | /videos                   | Fetch all videos.                         |
-| GET    | /videos/{id}              | Fetch a specific video’s details.         |
-| POST   | /videos                   | Upload a new video (Mentor only).         |
-| PUT    | /videos/{id}              | Update a video (Mentor only).             |
-| DELETE | /videos/{id}              | Delete a video (Mentor only).             |
-| GET    | /videos/paywall/{id}      | Fetch paywalled video content.            |
-| POST   | /purchase                 | Purchase a class/course.                  |
-| GET    | /purchases/{userId}       | Fetch all purchases for a user.           |
-| POST   | /live                     | Create a new live class (Mentor only).    |
-| GET    | /live/{id}                | Fetch details of a live class.            |
-| POST   | /live/join/{id}           | Join a live class.                        |
-| GET    | /calendar                 | Fetch user’s calendar and schedule.       |
-| POST   | /calendar                 | Add a new event to the user's calendar.   |
-| PUT    | /calendar/{id}            | Update an event in the user’s calendar.   |
-| DELETE | /calendar/{id}            | Delete an event from the user’s calendar. |
-| POST   | /video-call               | Schedule a video call session.            |
-| GET    | /video-call/{id}          | Fetch details of a video call session.    |
-| PUT    | /video-call/{id}          | Update a video call session.              |
-| DELETE | /video-call/{id}          | Cancel a video call session.              |
-| GET    | /points/{userId}          | Fetch user’s points.                      |
-| POST   | /redeem                   | Redeem points for prizes.                 |
-| GET    | /prizes                   | Fetch available prizes.                   |
-| POST   | /chat                     | Send a message in the chat.               |
-| GET    | /chat/{roomId}            | Fetch messages in a chat room.            |
-| DELETE | /chat/{messageId}         | Delete a chat message.                    |
-| POST   | /report                   | Report an abusive comment.                |
-| GET    | /profile                  | Fetch user profile details.               |
-| GET    | /search                   | Search and filter courses and mentors.    |
-| GET    | /top                      | Fetch top-rated courses and mentors.      |
-| GET    | /feedback                 | Submit platform feedback.                 |
+### 🔗 API Endpoints:  
+
+| Method  | Endpoint                                       | Description                                      |
+|---------|-----------------------------------------------|--------------------------------------------------|
+| GET     | /users                                        | Fetch all users.                                |
+| POST    | /register                                    | Register a new user.                           |
+| POST    | /login                                       | User login.                                    |
+| POST    | /refresh-token                               | Refresh JWT token.                             |
+| GET     | /profile                                     | Fetch authenticated user's profile. (Protected) |
+| PUT     | /profile/update                              | Update user profile. (Protected)               |
+| POST    | /logout                                      | Logout user. (Protected)                       |
+| POST    | /courses/create                              | Create a new course. (Mentor only)             |
+| PUT     | /courses/{courseId}                          | Update a course. (Mentor only)                 |
+| DELETE  | /courses/{courseId}                          | Delete a course. (Mentor only)                 |
+| GET     | /courses                                     | Fetch all courses.                             |
+| GET     | /mentor/courses                              | Fetch courses by mentor. (Mentor only)         |
+| POST    | /lessons/create                              | Create a new lesson. (Mentor only)             |
+| PUT     | /lessons/{lessonId}                          | Update a lesson. (Mentor only)                 |
+| DELETE  | /lessons/{lessonId}                          | Delete a lesson. (Mentor only)                 |
+| GET     | /lessons/course/{courseId}                   | Fetch lessons for a course.                    |
+| GET     | /lessons/{lessonId}                          | Fetch a specific lesson.                       |
+| POST    | /courses/{courseId}/lessons/{lessonId}/complete  | Mark a lesson as complete. (Protected)         |
+| POST    | /courses/{courseId}/lessons/{lessonId}/incomplete | Mark a lesson as incomplete. (Protected)       |
+| GET     | /courses/{courseId}/progress                 | Get user progress for a course. (Protected)    |
+| POST    | /upload                                      | Upload a file. (Protected)                     |
+
 
 ---
 
@@ -199,28 +174,27 @@ A mock user interface has been designed using Figma. The design includes:
 
 ### Milestone 1: Basic Infrastructure and Some Core Functionality
 
-- Set up the development environment with Docker.
 - Create the Laravel backend with user authentication.
-- Design the database schema in Microsoft SQL Server.
+- Design the database schema in MySQL.
 - Build the React frontend structure.
-- Start implementing course and video management (upload, update, and paywall functionality).
+- Start implementing profile management
 
 
 ### Milestone 2: Core Functionality
 
--   Complete implementing course and video management (upload, update, and paywall functionality).
--   Develop the live class and broadcasting system.
--   Add real-time chat functionality with file sharing.
--   Build the video call session functionality for mentor-learner interaction.
--   Implement the session scheduler with Google Calendar integration.
+-   Complete implementing profile management (upload, update)
+-   Complete implementing course management (upload, update, and paywall functionality).
+-   Start implementing mentor dashboard.
+-   Start implementing live streaming.
+-   Start implementing lesson management (upload, update, delete).
 
 
 ### Milestone 3: Final Touches and Deployment
 
--   Implement the learner points system and prize redemption.
--   Develop the admin dashboard for user, course, and content management.
+-   Complete Implementing live streaming via Jitsi.
+-   Complete Implementing lesson management (upload, update, delete).
+-   Complete implementing mentor dashboard (create course , create lesson , mentor specific courses)
 -   Perform UI/UX refinements based on user testing and feedback.
--   Deploy the project using Docker to a cloud platform (e.g., AWS, Vercel).
 
 ---
 
