@@ -60,17 +60,17 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/lessons/course/{courseId}', [LessonController::class, 'getLessonsByCourse']);
     Route::get('/lessons/{lessonId}', [LessonController::class, 'getLessonById']);
 
-    
+
 
 
 
     // Fetch quiz questions
     Route::get('/quiz/questions', [QuizController::class, 'getQuizQuestions']);
-    
+
     // Submit quiz answers
     Route::post('/quiz/submit', [QuizController::class, 'submitQuizAnswers']);
-    
-    
+
+
 });
 
 // Upload route
@@ -82,4 +82,4 @@ Route::get('/meetings/{meeting}', [MeetingController::class, 'show']);
 
 
 //enroll user
-Route::get('/users/enrolled-courses', [AuthController::class, 'getEnrolledCourses']); 
+Route::get('/users/enrolled-courses', [AuthController::class, 'getEnrolledCourses']);

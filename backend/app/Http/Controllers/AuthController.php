@@ -62,11 +62,11 @@ class AuthController extends Controller
     {
         // Retrieve the authenticated user from the request
         $user = $request->attributes->get('user');
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-    
+
         // Call the authService to perform the logout
         return $this->authService->logout($request->header('Authorization'));
     }
@@ -75,11 +75,11 @@ class AuthController extends Controller
     {
         // Retrieve the authenticated user from the request
         $user = $request->attributes->get('user');
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-    
+
         // Call the authService to get the profile data
         return $this->authService->getProfile($user);
     }
@@ -89,18 +89,18 @@ class AuthController extends Controller
     {
         if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
             return response()->json(['error' => 'Token required'], 401);
-        }        
+        }
         $userId = $this->getUserIdFromToken($request->header('Authorization'));
         if (!$userId) {
             return response()->json(['error' => 'Invalid token'], 403);
         }
         // Retrieve the authenticated user from the request
         $user = $request->attributes->get('user');
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-  
+
         // Validate the request data
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
@@ -110,19 +110,19 @@ class AuthController extends Controller
             'password' => 'nullable|string|min:6',
             'role' => 'sometimes|required|string|in:Admin,Mentor,Learner',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-    
+
         // Call the authService to update the profile
         return $this->authService->updateProfile($user, $request->all());
     }
-    
+
 
     /**
      * Extract user ID from the token
-     * 
+     *
      * @param string $tokenString
      * @return mixed
      */
@@ -141,11 +141,11 @@ class AuthController extends Controller
     {
         // Retrieve the authenticated user from the request
         $user = $request->attributes->get('user');
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-    
+
         // Call the authService to get the enrolled courses
         $courses = $this->authService->getEnrolledCourses($user); // Check this line
         return response()->json($courses);

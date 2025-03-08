@@ -8,7 +8,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     protected $table = 'users';
     protected $primaryKey = 'user_id';
@@ -22,11 +23,11 @@ class User extends Authenticatable
     public $timestamps = true;
 
 
-        /**
+    /**
      * Relationship: Courses (Courses this user is enrolled in)
      */
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id'); 
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id');
     }
 }
