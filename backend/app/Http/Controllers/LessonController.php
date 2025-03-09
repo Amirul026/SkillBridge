@@ -108,9 +108,7 @@ class LessonController extends Controller
      */
     public function getLessonsByCourse(Request $request, $courseId)
     {
-        if (!$this->isMentor($request)) {
-            return response()->json(['error' => 'Unauthorized: Only mentors can view lessons'], 403);
-        }
+
 
         try {
             $lessons = $this->lessonService->getLessonsByCourse($courseId);
@@ -125,9 +123,7 @@ class LessonController extends Controller
      */
     public function getLessonById(Request $request, $lessonId)
     {
-        if (!$this->isMentor($request)) {
-            return response()->json(['error' => 'Unauthorized: Only mentors can view this lesson'], 403);
-        }
+
 
         try {
             $lesson = $this->lessonService->getLessonById($lessonId);
