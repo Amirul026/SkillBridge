@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -6,6 +7,8 @@ use App\Services\CourseService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 
 class CourseController extends Controller
 {
@@ -21,7 +24,7 @@ class CourseController extends Controller
      */
     public function createCourse(Request $request)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
+        if (!$this->isValidToken($request)) {
             return response()->json(['error' => 'Token required'], 401);
         }
 
@@ -50,7 +53,6 @@ class CourseController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Merge mentor_id into the request data
         $courseData = array_merge($request->all(), ['mentor_id' => $mentorId]);
 
         try {
@@ -66,7 +68,7 @@ class CourseController extends Controller
      */
     public function updateCourse(Request $request, $courseId)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
+        if (!$this->isValidToken($request)) {
             return response()->json(['error' => 'Token required'], 401);
         }
 
@@ -110,7 +112,7 @@ class CourseController extends Controller
      */
     public function deleteCourse(Request $request, $courseId)
     {
-        if (!$request->header('Authorization') || !str_starts_with($request->header('Authorization'), 'Bearer ')) {
+        if (!$this->isValidToken($request)) {
             return response()->json(['error' => 'Token required'], 401);
         }
 
@@ -118,6 +120,7 @@ class CourseController extends Controller
         if ($role !== 'Mentor') {
             return response()->json(['error' => 'Unauthorized: Only mentors can delete courses'], 403);
         }
+
         $mentorId = $this->getUserIdFromToken($request->header('Authorization'));
         $course = DB::table('courses')->where('course_id', $courseId)->first();
         if (!$course || $course->mentor_id !== $mentorId) {
@@ -132,10 +135,15 @@ class CourseController extends Controller
         }
     }
 
+    private function isValidToken(Request $request)
+    {
+        return $request->header('Authorization') && str_starts_with($request->header('Authorization'), 'Bearer ');
+    }
+
     private function getUserRoleFromToken($tokenString)
     {
         try {
-            $parser = new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder());
+            $parser = new Parser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
             return $token->claims()->get('role');
         } catch (\Exception $e) {
@@ -146,28 +154,16 @@ class CourseController extends Controller
     private function getUserIdFromToken($tokenString)
     {
         try {
-            $parser = new \Lcobucci\JWT\Token\Parser(new \Lcobucci\JWT\Encoding\JoseEncoder());
+            $parser = new Parser(new JoseEncoder());
             $token = $parser->parse(str_replace('Bearer ', '', $tokenString));
             return $token->claims()->get('uid');
         } catch (\Exception $e) {
             return null;
         }
     }
+
     /**
      * Get all courses
-     */
-    // public function getCourses()
-    // {
-    //     try {
-    //         $courses = $this->courseService->getCourses();
-    //         return response()->json(['courses' => $courses], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
-    //     }
-    // }
-
-        /**
-     * Get all courses.
      */
     public function index()
     {
@@ -175,29 +171,16 @@ class CourseController extends Controller
         return response()->json($courses);
     }
 
-    /**
-     * Get a single course by ID
-     */
-    // public function getCourse($courseId)
-    // {
-    //     try {
-    //         $course = $this->courseService->getCourseById($courseId);
-    //         return response()->json(['course' => $course], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
-    //     }
-    // }
-
     public function getCoursesByMentor(Request $request)
     {
         $user = $request->attributes->get('user');
-    
+
         Log::info('CourseController: User object: ' . json_encode($user));
-    
+
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
-    
+
         $mentorId = $user->user_id;
         $courses = $this->courseService->getCoursesByMentorId($mentorId);
         return response()->json($courses);
